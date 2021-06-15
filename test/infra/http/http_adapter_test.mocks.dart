@@ -12,6 +12,8 @@ import 'package:http/src/response.dart' as _i2;
 import 'package:http/src/streamed_response.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 
+import 'http_adapter_test.dart' as _i9;
+
 // ignore_for_file: avoid_redundant_argument_values
 // ignore_for_file: comment_references
 // ignore_for_file: invalid_use_of_visible_for_testing_member
@@ -21,6 +23,8 @@ import 'package:mockito/mockito.dart' as _i1;
 class _FakeResponse extends _i1.Fake implements _i2.Response {}
 
 class _FakeStreamedResponse extends _i1.Fake implements _i3.StreamedResponse {}
+
+class _FakeClient extends _i1.Fake implements _i4.Client {}
 
 /// A class which mocks [Client].
 ///
@@ -100,4 +104,20 @@ class MockClient extends _i1.Mock implements _i4.Client {
   @override
   void close() => super.noSuchMethod(Invocation.method(#close, []),
       returnValueForMissingStub: null);
+}
+
+/// A class which mocks [HttpAdapater].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockHttpAdapater extends _i1.Mock implements _i9.HttpAdapater {
+  @override
+  _i4.Client get client => (super.noSuchMethod(Invocation.getter(#client),
+      returnValue: _FakeClient()) as _i4.Client);
+  @override
+  _i5.Future<void>? request(
+          {String? url, String? method, Map<dynamic, dynamic>? body}) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #request, [], {#url: url, #method: method, #body: body}),
+          returnValueForMissingStub: Future.value()) as _i5.Future<void>?);
 }
