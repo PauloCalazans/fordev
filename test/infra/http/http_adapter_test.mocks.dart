@@ -114,10 +114,9 @@ class MockHttpAdapater extends _i1.Mock implements _i9.HttpAdapater {
   _i4.Client get client => (super.noSuchMethod(Invocation.getter(#client),
       returnValue: _FakeClient()) as _i4.Client);
   @override
-  _i5.Future<void>? request(
+  _i5.Future<Map<dynamic, dynamic>>? request(
           {String? url, String? method, Map<dynamic, dynamic>? body}) =>
-      (super.noSuchMethod(
-          Invocation.method(
-              #request, [], {#url: url, #method: method, #body: body}),
-          returnValueForMissingStub: Future.value()) as _i5.Future<void>?);
+      (super.noSuchMethod(Invocation.method(
+              #request, [], {#url: url, #method: method, #body: body}))
+          as _i5.Future<Map<dynamic, dynamic>>?);
 }
