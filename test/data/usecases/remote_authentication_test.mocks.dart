@@ -22,9 +22,9 @@ class MockHttpClient extends _i1.Mock implements _i2.HttpClient {
   }
 
   @override
-  _i3.Future<Map<dynamic, dynamic>>? request(
+  _i3.Future<Map<dynamic, dynamic>?>? request(
           {String? url, String? method, Map<dynamic, dynamic>? body}) =>
       (super.noSuchMethod(Invocation.method(
               #request, [], {#url: url, #method: method, #body: body}))
-          as _i3.Future<Map<dynamic, dynamic>>?);
+          as _i3.Future<Map<dynamic, dynamic>?>?);
 }

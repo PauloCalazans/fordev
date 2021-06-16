@@ -6,13 +6,12 @@ import 'dart:async' as _i5;
 import 'dart:convert' as _i6;
 import 'dart:typed_data' as _i7;
 
+import 'package:fordev/infra/http/http_adapter.dart' as _i9;
 import 'package:http/src/base_request.dart' as _i8;
 import 'package:http/src/client.dart' as _i4;
 import 'package:http/src/response.dart' as _i2;
 import 'package:http/src/streamed_response.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
-
-import 'http_adapter_test.dart' as _i9;
 
 // ignore_for_file: avoid_redundant_argument_values
 // ignore_for_file: comment_references
@@ -114,9 +113,9 @@ class MockHttpAdapater extends _i1.Mock implements _i9.HttpAdapater {
   _i4.Client get client => (super.noSuchMethod(Invocation.getter(#client),
       returnValue: _FakeClient()) as _i4.Client);
   @override
-  _i5.Future<Map<dynamic, dynamic>>? request(
+  _i5.Future<Map<dynamic, dynamic>?>? request(
           {String? url, String? method, Map<dynamic, dynamic>? body}) =>
       (super.noSuchMethod(Invocation.method(
               #request, [], {#url: url, #method: method, #body: body}))
-          as _i5.Future<Map<dynamic, dynamic>>?);
+          as _i5.Future<Map<dynamic, dynamic>?>?);
 }
