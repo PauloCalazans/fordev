@@ -19,12 +19,14 @@ class HttpAdapater implements HttpClient {
       'accept': 'application/json'
     };
     final requestBody = body != null ? jsonEncode(body) : null;
-
-    var response = await client.post(
-        Uri.parse(url),
-        headers: headers,
-        body: requestBody
-    );
+    var response = Response('', 500);
+    if(method == 'post') {
+      response = await client.post(
+          Uri.parse(url),
+          headers: headers,
+          body: requestBody
+      );
+    }
 
     return _handleResponse(response);
   }
