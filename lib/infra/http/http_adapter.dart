@@ -26,6 +26,10 @@ class HttpAdapater implements HttpClient {
         body: requestBody
     );
 
+    return _handleResponse(response);
+  }
+
+  Map? _handleResponse(Response response) {
     if(response.statusCode == 200) {
       return response.body.isEmpty ? null : jsonDecode(response.body);
     } else {
