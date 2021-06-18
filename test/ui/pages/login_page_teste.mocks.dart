@@ -22,9 +22,9 @@ class MockLoginPresenter extends _i1.Mock implements _i2.LoginPresenter {
   }
 
   @override
-  _i3.Stream<String> get emailErrorStream =>
+  _i3.Stream<String?> get emailErrorStream =>
       (super.noSuchMethod(Invocation.getter(#emailErrorStream),
-          returnValue: Stream<String>.empty()) as _i3.Stream<String>);
+          returnValue: Stream<String?>.empty()) as _i3.Stream<String?>);
   @override
   void validateEmail(String? email) =>
       super.noSuchMethod(Invocation.method(#validateEmail, [email]),
