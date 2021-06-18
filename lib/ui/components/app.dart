@@ -73,7 +73,7 @@ class App extends StatelessWidget {
           color: primaryColorLight
         )
       ),
-      home: LoginPage(),
+      home: LoginPage(null),
     );
   }
 }

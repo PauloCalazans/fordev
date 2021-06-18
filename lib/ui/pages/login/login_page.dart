@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../components/component.dart';
+import '../../components/component.dart';
+import 'login_presenter.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  final LoginPresenter? presenter;
+
+  LoginPage(this.presenter);
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +31,7 @@ class LoginPage extends StatelessWidget {
                           icon: Icon(Icons.email, color: Theme.of(context).primaryColorLight)
                         ),
                         keyboardType: TextInputType.emailAddress,
+                        onChanged: presenter?.validateEmail,
                       ),
 
                       Padding(
@@ -38,6 +42,7 @@ class LoginPage extends StatelessWidget {
                               icon: Icon(Icons.lock, color: Theme.of(context).primaryColorLight)
                           ),
                           obscureText: true,
+                          onChanged: presenter?.validatePassword,
                         ),
                       ),
 
