@@ -1,13 +1,9 @@
 import 'dart:async';
-
 import 'package:faker/faker.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-
-abstract class Validation {
-  String? validate({required String field, required String value});
-}
+import 'package:fordev/presentation/presenters/dependencies/validation.dart';
 
 class LoginState {
   String? emailError;
