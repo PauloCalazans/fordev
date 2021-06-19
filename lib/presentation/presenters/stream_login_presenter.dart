@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:fordev/ui/pages/login/login_presenter.dart';
+
 import '../../domain/helpers/domain_error.dart';
 import '../../domain/usecases/authentication.dart';
 
 import '../presenters/dependencies/dependencies.dart';
 
-class StreamLoginPresenter {
+class StreamLoginPresenter implements LoginPresenter {
   StreamLoginPresenter({required this.validation, required this.authentication});
 
   final Validation validation;
@@ -24,7 +26,7 @@ class StreamLoginPresenter {
 
   void validateEmail(String email) {
     _state.email = email;
-    _state.emailError = validation.validate(field: 'email', value: email);
+    _state.emailError = validation.validate(field: 'email', value: email!);
     _update();
   }
 

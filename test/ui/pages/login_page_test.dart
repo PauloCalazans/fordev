@@ -29,7 +29,7 @@ void main() {
   void mockStreams() {
     when(() => presenter.emailErrorStream).thenAnswer((_) => emailErrorController.stream);
     when(() => presenter.passwordErrorStream).thenAnswer((_) => passwordErrorController.stream);
-    when(() => presenter.mainErrorController).thenAnswer((_) => mainErrorController.stream);
+    when(() => presenter.mainErrorStream).thenAnswer((_) => mainErrorController.stream);
     when(() => presenter.isFormValidStream).thenAnswer((_) => isFormValidController.stream);
     when(() => presenter.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
   }

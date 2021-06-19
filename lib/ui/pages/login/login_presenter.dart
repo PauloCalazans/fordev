@@ -1,12 +1,12 @@
 abstract class LoginPresenter {
-  Stream<String?> get emailErrorStream;
-  Stream<String?> get passwordErrorStream;
-  Stream<String?> get mainErrorController;
-  Stream<bool> get isFormValidStream;
-  Stream<bool> get isLoadingStream;
+  Stream<String?>? get emailErrorStream;
+  Stream<String?>? get passwordErrorStream;
+  Stream<String?>? get mainErrorStream;
+  Stream<bool>? get isFormValidStream;
+  Stream<bool>? get isLoadingStream;
 
-  void validateEmail(String? email);
-  void validatePassword(String? password);
+  void validateEmail(String email);
+  void validatePassword(String password);
   Future<void>? auth();
   void dispose();
 
