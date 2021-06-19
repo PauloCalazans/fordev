@@ -35,13 +35,7 @@ class _LoginPageState extends State<LoginPage> {
 
             widget.presenter!.mainErrorController.listen((error) {
               if (error != null) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(
-                    SnackBar(
-                        backgroundColor: Colors.redAccent,
-                        content: Text(error, textAlign: TextAlign.center)
-                    )
-                );
+                showErrorMessage(context, error);
               }
             });
 
