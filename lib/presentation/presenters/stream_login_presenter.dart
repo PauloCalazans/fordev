@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:fordev/domain/usecases/authentication.dart';
+
 import '../presenters/dependencies/dependencies.dart';
 
 class StreamLoginPresenter {
   final Validation validation;
+  final Authentication authentication;
   final _controller = StreamController<LoginState>.broadcast();
 
   var _state = LoginState();
@@ -11,7 +14,7 @@ class StreamLoginPresenter {
   Stream<String?> get emailErrorStream => _controller.stream.map((state) => state.emailError).distinct();
   Stream<String?> get passwordErrorStream => _controller.stream.map((state) => state.passwordError).distinct();
   Stream<bool> get isFormValidStream => _controller.stream.map((state) => state.isFormValid).distinct();
-  StreamLoginPresenter({required this.validation});
+  StreamLoginPresenter({required this.validation, required this.authentication});
 
   void _update() => _controller.add(_state);
 
@@ -25,6 +28,10 @@ class StreamLoginPresenter {
     _state.password = password;
     _state.passwordError = validation.validate(field: 'password', value: password);
     _update();
+  }
+
+  Future<void> auth() async {
+    authentication.auth(AuthenticationParams(email: _state.email!, secret: _state.password!));
   }
 }
 

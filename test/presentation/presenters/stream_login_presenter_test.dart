@@ -2,13 +2,17 @@ import 'package:test/test.dart';
 import 'package:faker/faker.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:fordev/domain/usecases/authentication.dart';
+
 import 'package:fordev/presentation/presenters/dependencies/dependencies.dart';
 import 'package:fordev/presentation/presenters/presenters.dart';
 
 class MockValidation extends Mock implements Validation {}
+class MockAuthentication extends Mock implements Authentication {}
 
 void main() {
   late MockValidation validation;
+  late MockAuthentication authentication;
   late StreamLoginPresenter sut;
   late String email;
   late String password;
@@ -26,7 +30,8 @@ void main() {
 
   setUp(() {
     validation = MockValidation();
-    sut = StreamLoginPresenter(validation: validation);
+    authentication = MockAuthentication();
+    sut = StreamLoginPresenter(validation: validation, authentication: authentication);
     email = faker.internet.email();
     password = faker.internet.password();
     mockValidation();
@@ -99,5 +104,14 @@ void main() {
     sut.validateEmail(email);
     await Future.delayed(Duration.zero);
     sut.validatePassword(password);
+  });
+
+  test('Should call Authentication with correct values', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+
+    await sut.auth();
+
+    verify(() => authentication.auth(AuthenticationParams(email: email, secret: password))).called(1);
   });
 }
