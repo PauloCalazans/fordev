@@ -26,7 +26,7 @@ class StreamLoginPresenter implements LoginPresenter {
 
   void validateEmail(String email) {
     _state.email = email;
-    _state.emailError = validation.validate(field: 'email', value: email!);
+    _state.emailError = validation.validate(field: 'email', value: email);
     _update();
   }
 
