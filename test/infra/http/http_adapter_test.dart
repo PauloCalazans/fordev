@@ -1,23 +1,23 @@
 import 'package:faker/faker.dart';
 import 'package:http/http.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
 import 'package:fordev/data/http/http.dart';
 
 import 'package:fordev/infra/http/http.dart';
 
-import 'http_adapter_test.mocks.dart';
+class MockClient extends Mock implements Client {}
 
+class FakeUri extends Fake implements Uri {}
 
-@GenerateMocks([Client], customMocks: [MockSpec<HttpAdapater>(returnNullOnMissingStub: true)])
 void main() {
   late HttpAdapater sut;
   late MockClient client;
   late String url;
 
-  setUp(() {
+  setUpAll(() {
+    registerFallbackValue(FakeUri());
     client = MockClient();
     sut = HttpAdapater(client);
     url = faker.internet.httpUrl();
@@ -32,7 +32,7 @@ void main() {
   });
 
   group('post', () {
-    PostExpectation mockRequest() => when(client.post(any, body: anyNamed('body'), headers: anyNamed('headers')));
+    When<Future<Response>> mockRequest() => when(() => client.post(any(), body: any(named: 'body'), headers: any(named: 'headers')));
 
     void mockResponse(int statusCode, {String body = '{"any_key": "any_value"}'}) {
       mockRequest().thenAnswer((_) async => Response(body, statusCode));
@@ -49,7 +49,7 @@ void main() {
     test('Should call post with correct values', () async {
       await sut.request(url: url, method: 'post', body: {'any_key': 'any_value'});
 
-      verify(
+      verify(() =>
         client.post(
             Uri.parse(url),
             headers: {
@@ -64,10 +64,10 @@ void main() {
     test('Should call post without body', () async {
       await sut.request(url: url, method: 'post');
 
-      verify(
+      verify(() =>
           client.post(
-              any,
-              headers: anyNamed('headers')
+              any(),
+              headers: any(named: 'headers')
           )
       );
     });

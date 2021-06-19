@@ -3,14 +3,12 @@ import 'dart:async';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
 
 import 'package:fordev/ui/pages/pages.dart';
+import 'package:mocktail/mocktail.dart';
 
-import 'login_page_test.mocks.dart';
+class MockLoginPresenter extends Mock implements LoginPresenter {}
 
-@GenerateMocks([LoginPresenter])
 void main() {
   late MockLoginPresenter presenter;
   late StreamController<String?> emailErrorController;
@@ -29,11 +27,11 @@ void main() {
   }
 
   void mockStreams() {
-    when(presenter.emailErrorStream).thenAnswer((_) => emailErrorController.stream);
-    when(presenter.passwordErrorStream).thenAnswer((_) => passwordErrorController.stream);
-    when(presenter.mainErrorController).thenAnswer((_) => mainErrorController.stream);
-    when(presenter.isFormValidErrorStream).thenAnswer((_) => isFormValidController.stream);
-    when(presenter.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
+    when(() => presenter.emailErrorStream).thenAnswer((_) => emailErrorController.stream);
+    when(() => presenter.passwordErrorStream).thenAnswer((_) => passwordErrorController.stream);
+    when(() => presenter.mainErrorController).thenAnswer((_) => mainErrorController.stream);
+    when(() => presenter.isFormValidErrorStream).thenAnswer((_) => isFormValidController.stream);
+    when(() => presenter.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
   }
 
   void closeStreamns() {
@@ -84,11 +82,11 @@ void main() {
 
     final email = faker.internet.email();
     await tester.enterText(find.bySemanticsLabel('Email'), email);
-    verify(presenter.validateEmail(email));
+    verify(() => presenter.validateEmail(email));
 
     final password = faker.internet.password();
     await tester.enterText(find.bySemanticsLabel('Senha'), password);
-    verify(presenter.validatePassword(password));
+    verify(() => presenter.validatePassword(password));
   });
 
   testWidgets('Should present error if email is invalid', (WidgetTester tester) async {
@@ -185,7 +183,7 @@ void main() {
     await tester.tap(find.byType(ElevatedButton));
     await tester.pump();
 
-    verify(presenter.auth()).called(1);
+    verify(() => presenter.auth()).called(1);
   });
 
   testWidgets('Should present loading', (WidgetTester tester) async {
@@ -222,7 +220,7 @@ void main() {
     await loadPage(tester);
 
    addTearDown(() {
-     verify(presenter.dispose()).called(1);
+     verify(() => presenter.dispose()).called(1);
    });
   });
 }
