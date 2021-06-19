@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:fordev/domain/helpers/domain_error.dart';
-import 'package:fordev/domain/usecases/authentication.dart';
+import '../../domain/helpers/domain_error.dart';
+import '../../domain/usecases/authentication.dart';
 
 import '../presenters/dependencies/dependencies.dart';
 

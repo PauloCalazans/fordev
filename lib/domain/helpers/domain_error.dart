@@ -6,10 +6,9 @@ enum DomainError {
 extension DomainErrorExtension on DomainError {
   String get description {
     var descriptions = {
-      DomainError.invalidCredentials: 'Credenciais inválidas.',
-      DomainError.unexpected: 'Houve algum erro inesperado.'
+      DomainError.invalidCredentials: 'Credenciais inválidas.'
     };
 
-    return descriptions[this] ?? '';
+    return descriptions[this] ?? 'Algo errado aconteceu. Tente novamente em breve.';
   }
 }
