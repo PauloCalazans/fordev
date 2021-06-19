@@ -8,7 +8,7 @@ import 'package:mockito/mockito.dart';
 
 import 'package:fordev/ui/pages/pages.dart';
 
-import 'login_page_teste.mocks.dart';
+import 'login_page_test.mocks.dart';
 
 @GenerateMocks([LoginPresenter])
 void main() {
@@ -19,29 +19,42 @@ void main() {
   late StreamController<bool> isFormValidController;
   late StreamController<bool> isLoadingController;
 
-  Future<void> loadPage(WidgetTester tester) async {
-    presenter = MockLoginPresenter();
+
+  void initStreams() {
     emailErrorController = StreamController<String?>();
     passwordErrorController = StreamController<String?>();
     mainErrorController = StreamController<String?>();
     isFormValidController = StreamController<bool>();
     isLoadingController = StreamController<bool>();
+  }
 
+  void mockStreams() {
     when(presenter.emailErrorStream).thenAnswer((_) => emailErrorController.stream);
     when(presenter.passwordErrorStream).thenAnswer((_) => passwordErrorController.stream);
     when(presenter.mainErrorController).thenAnswer((_) => mainErrorController.stream);
     when(presenter.isFormValidErrorStream).thenAnswer((_) => isFormValidController.stream);
     when(presenter.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
-    final loginPage = MaterialApp(home: LoginPage(presenter));
-    await tester.pumpWidget(loginPage);
   }
 
-  tearDown(() {
+  void closeStreamns() {
     emailErrorController.close();
     passwordErrorController.close();
     isFormValidController.close();
     isLoadingController.close();
     mainErrorController.close();
+  }
+
+  Future<void> loadPage(WidgetTester tester) async {
+    presenter = MockLoginPresenter();
+    initStreams();
+    mockStreams();
+
+    final loginPage = MaterialApp(home: LoginPage(presenter));
+    await tester.pumpWidget(loginPage);
+  }
+
+  tearDown(() {
+    closeStreamns();
   });
   
   testWidgets('Should load with correct initial state', (WidgetTester tester) async {
