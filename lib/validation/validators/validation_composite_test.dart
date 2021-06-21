@@ -11,7 +11,7 @@ class ValidationComposite implements Validation {
   @override
   String? validate({required String field, required String value}) {
     String? error;
-    for (var validation in validations) {
+    for (var validation in validations.where((val) => val.field == field)) {
       error = validation.validate(value);
 
       if(error?.isNotEmpty == true) {
@@ -44,13 +44,13 @@ void main() {
 
   setUp(() {
     validation1 = MockFieldValidation();
-    when(() => validation1.field).thenReturn('any_field');
+    when(() => validation1.field).thenReturn('other_field');
     mockValidation1(null);
     validation2 = MockFieldValidation();
     when(() => validation2.field).thenReturn('any_field');
     mockValidation2(null);
     validation3 = MockFieldValidation();
-    when(() => validation2.field).thenReturn('other_field');
+    when(() => validation3.field).thenReturn('any_field');
     mockValidation3(null);
     sut = ValidationComposite([validation1, validation2, validation3]);
   });
@@ -70,6 +70,6 @@ void main() {
 
     final error = sut.validate(field: 'any_field', value: 'any_value');
 
-    expect(error, 'error_1');
+    expect(error, 'error_2');
   });
 }
