@@ -2,12 +2,15 @@ import '../../validation/dependencies/dependencies.dart';
 import '../../validation/validators/validators.dart';
 
 class ValidationBuilder {
+
+  ValidationBuilder._();
+
   static late ValidationBuilder _instance;
   late String fieldName;
   List<FieldValidation> validations = [];
 
   static ValidationBuilder field(String fieldName) {
-    _instance = ValidationBuilder();
+    _instance = ValidationBuilder._();
     _instance.fieldName = fieldName;
 
     return _instance;
