@@ -22,6 +22,13 @@ class _LoginPageState extends State<LoginPage> {
     widget.presenter!.dispose();
   }
 
+  void _hideKeyboard() {
+    final currentFocus = FocusScope.of(context);
+    if(!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,41 +48,44 @@ class _LoginPageState extends State<LoginPage> {
               }
             });
 
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  LoginHeader(),
+            return GestureDetector(
+              onTap: () => _hideKeyboard,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    LoginHeader(),
 
-                  Headline1(text: 'Login'),
+                    Headline1(text: 'Login'),
 
-                  Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Provider<LoginPresenter>(
-                      create: (_) => widget.presenter!,
-                      child: Form(
-                          child: Column(
-                            children: [
-                              EmailInput(),
+                    Padding(
+                      padding: const EdgeInsets.all(32),
+                      child: Provider<LoginPresenter>(
+                        create: (_) => widget.presenter!,
+                        child: Form(
+                            child: Column(
+                              children: [
+                                EmailInput(),
 
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0, bottom: 32),
-                                child: PasswordInput(),
-                              ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0, bottom: 32),
+                                  child: PasswordInput(),
+                                ),
 
-                              LoginButon(),
+                                LoginButon(),
 
-                              TextButton.icon(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.person),
-                                  label: Text('Criar Conta')
-                              )
-                            ],
-                          )
+                                TextButton.icon(
+                                    onPressed: () {},
+                                    icon: Icon(Icons.person),
+                                    label: Text('Criar Conta')
+                                )
+                              ],
+                            )
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             );
           }
