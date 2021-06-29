@@ -17,7 +17,7 @@ class FakeAuthenticationsParams extends Fake implements AuthenticationParams {}
 void main() {
   late MockValidation validation;
   late MockAuthentication authentication;
-  late StreamLoginPresenter sut;
+  late GetxLoginPresenter sut;
   late String email;
   late String password;
 
@@ -47,7 +47,7 @@ void main() {
     registerFallbackValue(FakeAuthenticationsParams());
     validation = MockValidation();
     authentication = MockAuthentication();
-    sut = StreamLoginPresenter(validation: validation, authentication: authentication);
+    sut = GetxLoginPresenter(validation: validation, authentication: authentication);
     email = faker.internet.email();
     password = faker.internet.password();
     mockValidation();
@@ -146,7 +146,7 @@ void main() {
     sut.validateEmail(email);
     sut.validatePassword(password);
 
-    expectLater(sut.isLoadingStream, emits(false));
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
     sut.mainErrorStream!.listen(expectAsync1((error) => expect(error, 'Credenciais inválidas.')));
 
     await sut.auth();
@@ -157,16 +157,9 @@ void main() {
     sut.validateEmail(email);
     sut.validatePassword(password);
 
-    expectLater(sut.isLoadingStream, emits(false));
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
     sut.mainErrorStream!.listen(expectAsync1((error) => expect(error, 'Algo errado aconteceu. Tente novamente em breve.')));
 
     await sut.auth();
-  });
-
-  test('Should not emit after dipose', () {
-    expectLater(sut.emailErrorStream, neverEmits(null));
-
-    sut.dispose();
-    sut.validateEmail(email);
   });
 }
