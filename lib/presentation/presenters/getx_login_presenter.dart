@@ -1,3 +1,4 @@
+import 'package:fordev/domain/entities/account_entity.dart';
 import 'package:fordev/domain/usecases/save_current_account.dart';
 import 'package:get/get.dart';
 
@@ -49,7 +50,7 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
     _isLoading.value = true;
     try {
       var accountEntity = await authentication.auth(AuthenticationParams(email: _email!, secret: _password!));
-      await saveCurrentAccount.save(accountEntity!);
+      await saveCurrentAccount.save(accountEntity);
     } on DomainError catch (error) {
       _mainError.value = error.description;
     }
