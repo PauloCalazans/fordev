@@ -4,16 +4,16 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fordev/infra/cache/cache.dart';
 
-class FlutterSecureStorageMock extends Mock implements FlutterSecureStorage {}
+class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
 
 void main() {
-  late FlutterSecureStorageMock secureStorage;
+  late MockFlutterSecureStorage secureStorage;
   late LocalStorageAdapter sut;
   late String key;
   late String value;
 
   setUp(() {
-    secureStorage = FlutterSecureStorageMock();
+    secureStorage = MockFlutterSecureStorage();
     sut = LocalStorageAdapter(secureStorage: secureStorage);
     key = faker.lorem.word();
     value = faker.guid.guid();
