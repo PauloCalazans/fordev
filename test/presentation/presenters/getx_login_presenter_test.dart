@@ -9,16 +9,16 @@ import 'package:fordev/domain/usecases/usecases.dart';
 import 'package:fordev/presentation/presenters/dependencies/dependencies.dart';
 import 'package:fordev/presentation/presenters/presenters.dart';
 
-class MockValidation extends Mock implements Validation {}
-class MockAuthentication extends Mock implements Authentication {}
-class MockSaveCurrentAccount extends Mock implements SaveCurrentAccount {}
+class ValidationSpy extends Mock implements Validation {}
+class AuthenticationSpy extends Mock implements Authentication {}
+class SaveCurrentAccountSpy extends Mock implements SaveCurrentAccount {}
 
 class FakeAuthenticationsParams extends Fake implements AuthenticationParams {}
 
 void main() {
-  late MockValidation validation;
-  late MockAuthentication authentication;
-  late MockSaveCurrentAccount saveCurrentAccount;
+  late ValidationSpy validation;
+  late AuthenticationSpy authentication;
+  late SaveCurrentAccountSpy saveCurrentAccount;
   late GetxLoginPresenter sut;
   late String email;
   late String password;
@@ -54,9 +54,9 @@ void main() {
 
   setUp(() {
     registerFallbackValue(FakeAuthenticationsParams());
-    validation = MockValidation();
-    authentication = MockAuthentication();
-    saveCurrentAccount = MockSaveCurrentAccount();
+    validation = ValidationSpy();
+    authentication = AuthenticationSpy();
+    saveCurrentAccount = SaveCurrentAccountSpy();
     sut = GetxLoginPresenter(
         validation: validation,
         authentication: authentication,

@@ -8,15 +8,15 @@ import 'package:fordev/domain/entities/entities.dart';
 import 'package:fordev/data/cache/cache.dart';
 import 'package:fordev/data/usecases/usecases.dart';
 
-class SaveSecureCacheStorageMock extends Mock implements SaveSecureCacheStorage {}
+class SaveSecureCacheStorageSpy extends Mock implements SaveSecureCacheStorage {}
 
 void main() {
   late LocalSaveCurrentAccount sut;
-  late SaveSecureCacheStorageMock saveSecureCacheStorage;
+  late SaveSecureCacheStorageSpy saveSecureCacheStorage;
   late AccountEntity account;
 
   setUp(() {
-    saveSecureCacheStorage = SaveSecureCacheStorageMock();
+    saveSecureCacheStorage = SaveSecureCacheStorageSpy();
     sut = LocalSaveCurrentAccount(saveSecureCacheStorage: saveSecureCacheStorage);
     account = AccountEntity(faker.guid.guid());
   });

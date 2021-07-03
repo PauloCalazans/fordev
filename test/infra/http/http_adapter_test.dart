@@ -7,18 +7,18 @@ import 'package:fordev/data/http/http.dart';
 
 import 'package:fordev/infra/http/http.dart';
 
-class MockClient extends Mock implements Client {}
+class ClientSpy extends Mock implements Client {}
 
 class FakeUri extends Fake implements Uri {}
 
 void main() {
   late HttpAdapater sut;
-  late MockClient client;
+  late ClientSpy client;
   late String url;
 
   setUpAll(() {
     registerFallbackValue(FakeUri());
-    client = MockClient();
+    client = ClientSpy();
     sut = HttpAdapater(client);
     url = faker.internet.httpUrl();
   });

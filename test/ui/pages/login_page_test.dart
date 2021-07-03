@@ -8,10 +8,10 @@ import 'package:fordev/ui/pages/pages.dart';
 import 'package:get/get.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockLoginPresenter extends Mock implements LoginPresenter {}
+class LoginPresenterSpy extends Mock implements LoginPresenter {}
 
 void main() {
-  late MockLoginPresenter presenter;
+  late LoginPresenterSpy presenter;
   late StreamController<String?> emailErrorController;
   late StreamController<String?> passwordErrorController;
   late StreamController<String?> navigateToController;
@@ -48,7 +48,7 @@ void main() {
   }
 
   Future<void> loadPage(WidgetTester tester) async {
-    presenter = MockLoginPresenter();
+    presenter = LoginPresenterSpy();
     initStreams();
     mockStreams();
 

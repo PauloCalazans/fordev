@@ -8,11 +8,11 @@ import 'package:fordev/domain/usecases/usecases.dart';
 import 'package:fordev/data/usecases/usecases.dart';
 import 'package:fordev/data/http/http.dart';
 
-class MockHttpClient extends Mock implements HttpClient {}
+class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
   late RemoteAuthentication sut;
-  late MockHttpClient httpClient;
+  late HttpClientSpy httpClient;
   late String url;
   late AuthenticationParams params;
 
@@ -29,7 +29,7 @@ void main() {
   }
 
   setUp(() {
-    httpClient = MockHttpClient();
+    httpClient = HttpClientSpy();
     url = faker.internet.httpUrl();
     sut = RemoteAuthentication(httpClient: httpClient, url: url);
     params = AuthenticationParams(email: faker.internet.email(), secret: faker.internet.password());
