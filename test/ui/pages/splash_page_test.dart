@@ -12,11 +12,11 @@ class SplashPresenterSpy extends Mock implements SplashPresenter {}
 
 void main() {
   late SplashPresenterSpy presenter;
-  late StreamController<String> navigateToController;
+  late StreamController<String?> navigateToController;
 
   Future<void> loadPage(WidgetTester tester) async {
     presenter = SplashPresenterSpy();
-    navigateToController = StreamController<String>();
+    navigateToController = StreamController<String?>();
     when(() => presenter.navigateToStream).thenAnswer((_) => navigateToController.stream);
 
     await tester.pumpWidget(
@@ -43,7 +43,7 @@ void main() {
   testWidgets('Should call loadCurrentAccout on page load', (WidgetTester tester) async {
     await loadPage(tester);
 
-    verify(() => presenter.loadCurrentAccount()).called(1);
+    verify(() => presenter.checkAccount()).called(1);
   });
 
   testWidgets('Should change page', (WidgetTester tester) async {
@@ -60,6 +60,10 @@ void main() {
     await loadPage(tester);
 
     navigateToController.add('');
+    await tester.pump();
+    expect(Get.currentRoute, '/');
+
+    navigateToController.add(null);
     await tester.pump();
     expect(Get.currentRoute, '/');
   });
