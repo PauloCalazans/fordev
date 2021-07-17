@@ -13,5 +13,5 @@ class LocalStorageAdapter implements SaveSecureCacheStorage, FetchSecureCacheSto
   }
 
   @override
-  Future<String?>? fetchSecure(String key) => secureStorage.read(key: key);
+  Future<String?>? fetchSecure(String key) async => await secureStorage.read(key: key);
 }
