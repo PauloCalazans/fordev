@@ -1,5 +1,6 @@
 import 'package:test/test.dart';
 
+import 'package:fordev/presentation/presenters/dependencies/dependencies.dart';
 import 'package:fordev/validation/validators/validators.dart';
 
 void main() {
@@ -15,6 +16,6 @@ void main() {
 
 
   test('Should return error if value is empty', () {
-    expect(sut.validate(''), 'Campo obrigatório');
+    expect(sut.validate(''), ValidationError.requiredField);
   });
 }
