@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fordev/ui/helpers/helpers.dart';
 import 'package:provider/provider.dart';
 
 import '../login_presenter.dart';
@@ -13,7 +14,7 @@ class LoginButon extends StatelessWidget {
         builder: (context, snapshot) {
           return ElevatedButton(
               onPressed: snapshot.data == true ? presenter.auth : null,
-              child: Text('Entrar'.toUpperCase())
+              child: Text(R.strings.enter.toUpperCase())
           );
         }
     );
