@@ -18,7 +18,7 @@ void main() {
 
   Map mockValidData() => {'accessToken': faker.guid.guid(), 'name': faker.person.name()};
 
-  When<Future<Map<dynamic, dynamic>?>?> mockRequest() => when(() => httpClient.request(url: any(named: 'url'), method: any(named: 'method') , body: any(named: 'body')));
+  When mockRequest() => when(() => httpClient.request(url: any(named: 'url'), method: any(named: 'method') , body: any(named: 'body')));
 
   void mockHttpData(Map data) {
     mockRequest().thenAnswer((_) async => data);

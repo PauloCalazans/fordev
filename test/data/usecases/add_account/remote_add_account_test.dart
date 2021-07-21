@@ -2,6 +2,7 @@ import 'package:faker/faker.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
+import 'package:fordev/domain/helpers/helpers.dart';
 import 'package:fordev/domain/usecases/usecases.dart';
 
 import 'package:fordev/data/usecases/usecases.dart';
@@ -15,6 +16,11 @@ void main() {
   late String url;
   late AddAccountParams params;
 
+  When mockRequest() => when(() => httpClient.request(url: any(named: 'url'), method: any(named: 'method') , body: any(named: 'body')));
+
+  void mockHttpError(HttpError error) {
+    mockRequest().thenThrow(error);
+  }
 
   setUp(() {
     httpClient = HttpClientSpy();
@@ -43,5 +49,13 @@ void main() {
             }
         )
     );
+  });
+
+  test('Should throw UnexpectedError if HttClient returns 400', () async {
+    mockHttpError(HttpError.badRequest);
+
+    final future = sut.add(params);
+
+    expect(future, throwsA(DomainError.unexpected));
   });
 }
