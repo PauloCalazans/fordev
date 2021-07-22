@@ -8,7 +8,9 @@ class EnUs implements Translations {
 
   String get addAccout => 'Add account';
   String get email => 'Mail';
+  String get name => 'Name';
   String get password => 'Password';
+  String get confirmPassword => 'Confirm Password';
   String get enter => 'Sig in';
   String get login => 'Sigin';
 }

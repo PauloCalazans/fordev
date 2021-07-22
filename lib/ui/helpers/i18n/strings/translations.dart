@@ -6,7 +6,9 @@ abstract class Translations {
 
   String get addAccout;
   String get email;
+  String get name;
   String get password;
+  String get confirmPassword;
   String get enter;
   String get login;
 }

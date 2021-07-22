@@ -53,7 +53,7 @@ class LoginPage extends StatelessWidget {
                   children: [
                     LoginHeader(),
 
-                    Headline1(text: 'Login'),
+                    Headline1(text: R.strings.login),
 
                     Padding(
                       padding: const EdgeInsets.all(32),
