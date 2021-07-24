@@ -210,7 +210,6 @@ void main() {
     mainErrorController.add(UIError.invalidCredentials);
     await tester.pump();
 
-
     expect(find.text('Credenciais inválidas'), findsOneWidget);
   });
 
@@ -219,7 +218,6 @@ void main() {
 
     mainErrorController.add(UIError.unexpected);
     await tester.pump();
-
 
     expect(find.text('Algo errado aconteceu. Tente novamente em breve.'), findsOneWidget);
   });

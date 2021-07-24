@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/helpers.dart';
 import '../../components/components.dart';
-import '../../helpers/i18n/i18n.dart';
 import 'components/components.dart';
 import 'signup_presenter.dart';
 
@@ -23,11 +23,17 @@ class SignUpPage extends StatelessWidget {
       body: Builder(
           builder: (context) {
 
-            presenter.isLoadingStream?.listen((isLoading) {
+            presenter.isLoadingStream!.listen((isLoading) {
               if(isLoading == true) {
                 showLoading(context);
               } else {
                 hideLoading(context);
+              }
+            });
+
+            presenter.mainErrorStream!.listen((error) {
+              if (error != null) {
+                showErrorMessage(context, error.description);
               }
             });
 
