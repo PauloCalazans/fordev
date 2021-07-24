@@ -7,8 +7,9 @@ import '../presenters/dependencies/dependencies.dart';
 class GetxSignUpPresenter extends GetxController {
   final Validation validation;
   final AddAccount addAccount;
+  final SaveCurrentAccount saveCurrentAccount;
 
-  GetxSignUpPresenter({required this.validation, required this.addAccount});
+  GetxSignUpPresenter({required this.validation, required this.addAccount, required this.saveCurrentAccount});
 
   var _emailError = Rxn<UIError>(null);
   var _nameError = Rxn<UIError>(null);
@@ -80,6 +81,7 @@ class GetxSignUpPresenter extends GetxController {
         password: _password!,
         passwordConfirmation: _passwordConfirmation!
     );
-      var accountEntity = await addAccount.add(params);
+    var account = await addAccount.add(params);
+    await saveCurrentAccount.save(account);
   }
 }

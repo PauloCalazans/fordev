@@ -10,12 +10,14 @@ import 'package:fordev/ui/helpers/errors/errors.dart';
 
 class ValidationSpy extends Mock implements Validation {}
 class AddAccountSpy extends Mock implements AddAccount {}
+class SaveCurrentAccountSpy extends Mock implements SaveCurrentAccount {}
 
 class FakeAddAccountParams extends Fake implements AddAccountParams {}
 
 void main() {
   late ValidationSpy validation;
   late AddAccountSpy addAccount;
+  late SaveCurrentAccountSpy saveCurrentAccount;
   late GetxSignUpPresenter sut;
   late String email;
   late String name;
@@ -42,12 +44,13 @@ void main() {
 
   setUp(() {
     registerFallbackValue(FakeAddAccountParams());
-
     validation = ValidationSpy();
     addAccount = AddAccountSpy();
+    saveCurrentAccount = SaveCurrentAccountSpy();
     sut = GetxSignUpPresenter(
       validation: validation,
-      addAccount: addAccount
+      addAccount: addAccount,
+      saveCurrentAccount: saveCurrentAccount
     );
     email = faker.internet.email();
     name = faker.person.name();
@@ -225,5 +228,16 @@ void main() {
         passwordConfirmation: passwordConfirmation
     );
     verify(() => addAccount.add(params)).called(1);
+  });
+
+  test('Should call SaveCurrentAccount with correct value', () async {
+    sut.validateName(name);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+    sut.validatePasswordConfirmation(passwordConfirmation);
+
+    await sut.signUp();
+
+    verify(() => saveCurrentAccount.save(AccountEntity(token))).called(1);
   });
 }
