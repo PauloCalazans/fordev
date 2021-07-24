@@ -1,13 +1,14 @@
 import 'package:get/get.dart';
 
+import '../../domain/usecases/usecases.dart';
 import '../../ui/helpers/errors/errors.dart';
-
 import '../presenters/dependencies/dependencies.dart';
 
 class GetxSignUpPresenter extends GetxController {
-  GetxSignUpPresenter({required this.validation});
-
   final Validation validation;
+  final AddAccount addAccount;
+
+  GetxSignUpPresenter({required this.validation, required this.addAccount});
 
   var _emailError = Rxn<UIError>(null);
   var _nameError = Rxn<UIError>(null);
@@ -70,5 +71,15 @@ class GetxSignUpPresenter extends GetxController {
         && _email != null
         && _password != null
         && _passwordConfirmation != null;
+  }
+
+  Future<void>? signUp() async {
+    AddAccountParams params = AddAccountParams(
+        name: _name!,
+        email: _email!,
+        password: _password!,
+        passwordConfirmation: _passwordConfirmation!
+    );
+      var accountEntity = await addAccount.add(params);
   }
 }
