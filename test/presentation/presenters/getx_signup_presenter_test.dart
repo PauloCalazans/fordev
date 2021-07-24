@@ -2,11 +2,11 @@ import 'package:faker/faker.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
+import 'package:fordev/domain/helpers/helpers.dart';
 import 'package:fordev/domain/usecases/usecases.dart';
 import 'package:fordev/domain/entities/entities.dart';
-import 'package:fordev/presentation/presenters/dependencies/dependencies.dart';
 import 'package:fordev/presentation/presenters/presenters.dart';
-import 'package:fordev/ui/helpers/errors/errors.dart';
+import 'package:fordev/ui/helpers/helpers.dart';
 
 class ValidationSpy extends Mock implements Validation {}
 class AddAccountSpy extends Mock implements AddAccount {}
@@ -40,6 +40,12 @@ void main() {
 
   void mockAddAccount() {
     mockAddAccountCall().thenAnswer((_) async => AccountEntity(token));
+  }
+
+  When mockSaveCurrentAccountCall() => when(() => saveCurrentAccount.save(any()));
+
+  void mockSaveCurrentAccountError() {
+    mockSaveCurrentAccountCall().thenThrow(DomainError.unexpected);
   }
 
   setUp(() {
@@ -239,5 +245,18 @@ void main() {
     await sut.signUp();
 
     verify(() => saveCurrentAccount.save(AccountEntity(token))).called(1);
+  });
+
+  test('Should emit UnexpectedError if SaveCurrentAccount fails', () async {
+    mockSaveCurrentAccountError();
+    sut.validateName(name);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+    sut.validatePasswordConfirmation(passwordConfirmation);
+
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+    sut.mainErrorStream!.listen(expectAsync1((error) => expect(error, UIError.unexpected)));
+
+    await sut.signUp();
   });
 }

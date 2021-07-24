@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../../domain/helpers/helpers.dart';
 import '../../domain/usecases/usecases.dart';
 import '../../ui/helpers/errors/errors.dart';
 import '../presenters/dependencies/dependencies.dart';
@@ -15,7 +16,9 @@ class GetxSignUpPresenter extends GetxController {
   var _nameError = Rxn<UIError>(null);
   var _passwordError = Rxn<UIError>(null);
   var _passwordConfirmationError = Rxn<UIError>(null);
+  var _mainError = Rxn<UIError>(null);
   var _isFormValid = false.obs;
+  var _isLoading = false.obs;
 
   String? _name;
   String? _email;
@@ -26,7 +29,9 @@ class GetxSignUpPresenter extends GetxController {
   Stream<UIError?>? get nameErrorStream => _nameError.stream;
   Stream<UIError?>? get passwordErrorStream => _passwordError.stream;
   Stream<UIError?>? get passwordConfirmationErrorStream => _passwordConfirmationError.stream;
+  Stream<UIError?>? get mainErrorStream => _mainError.stream;
   Stream<bool?> get isFormValidStream => _isFormValid.stream;
+  Stream<bool?> get isLoadingStream => _isLoading.stream;
 
   void validateEmail(String email) {
     _email = email;
@@ -75,13 +80,24 @@ class GetxSignUpPresenter extends GetxController {
   }
 
   Future<void>? signUp() async {
-    AddAccountParams params = AddAccountParams(
-        name: _name!,
-        email: _email!,
-        password: _password!,
-        passwordConfirmation: _passwordConfirmation!
-    );
-    var account = await addAccount.add(params);
-    await saveCurrentAccount.save(account);
+
+    try {
+      _isLoading.value = true;
+      AddAccountParams params = AddAccountParams(
+          name: _name!,
+          email: _email!,
+          password: _password!,
+          passwordConfirmation: _passwordConfirmation!
+      );
+      var account = await addAccount.add(params);
+      await saveCurrentAccount.save(account);
+
+    } on DomainError catch (error) {
+      switch(error) {
+        default: _mainError.value = UIError.unexpected; break;
+      }
+
+      _isLoading.value = false;
+    }
   }
 }
