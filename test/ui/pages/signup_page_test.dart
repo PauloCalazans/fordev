@@ -19,6 +19,7 @@ void main() {
   late StreamController<UIError?> mainErrorController;
   late StreamController<bool?> isFormValidController;
   late StreamController<bool?> isLoadingController;
+  late StreamController<String?> navigateToController;
 
 
   void initStreams() {
@@ -29,6 +30,7 @@ void main() {
     isFormValidController = StreamController<bool?>();
     isLoadingController = StreamController<bool?>();
     passwordConfirmationErrorController = StreamController<UIError?>();
+    navigateToController = StreamController<String?>();
   }
 
   void mockStreams() {
@@ -39,6 +41,7 @@ void main() {
     when(() => presenter.mainErrorStream).thenAnswer((_) => mainErrorController.stream);
     when(() => presenter.isFormValidStream).thenAnswer((_) => isFormValidController.stream);
     when(() => presenter.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
+    when(() => presenter.navigateToStream).thenAnswer((_) => navigateToController.stream);
   }
 
   void closeStreamns() {
@@ -49,6 +52,7 @@ void main() {
     mainErrorController.close();
     isFormValidController.close();
     isLoadingController.close();
+    navigateToController.close();
   }
 
   Future<void> loadPage(WidgetTester tester) async {
@@ -274,5 +278,25 @@ void main() {
     expect(find.text('Algo errado aconteceu. Tente novamente em breve.'), findsOneWidget);
   });
 
+  testWidgets('Should change page', (WidgetTester tester) async {
+    await loadPage(tester);
 
+    navigateToController.add('/any_route');
+    await tester.pumpAndSettle();
+
+    expect(Get.currentRoute, '/any_route');
+    expect(find.text('fake page'), findsOneWidget);
+  });
+
+  testWidgets('Should not change page', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    navigateToController.add('');
+    await tester.pump();
+    expect(Get.currentRoute, '/signup');
+
+    navigateToController.add(null);
+    await tester.pump();
+    expect(Get.currentRoute, '/signup');
+  });
 }
