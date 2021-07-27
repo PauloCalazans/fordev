@@ -77,7 +77,7 @@ class SignUpPage extends StatelessWidget {
 
                                 SignUpButton(),
                                 TextButton.icon(
-                                    onPressed: () {},
+                                    onPressed: presenter.goToLogin,
                                     icon: Icon(Icons.login),
                                     label: Text(R.strings.login)
                                 )
