@@ -28,7 +28,7 @@ void main() {
   When mockValidationCall(String? field) => when(() =>
     validation.validate(
         field: field == null ? any(named: 'field') : field,
-        value: any(named: 'value')
+        input: any(named: 'input')
     )
   );
 
@@ -73,7 +73,7 @@ void main() {
   test('Should call Validation with correct email', () {
     sut.validateEmail(email);
 
-    verify(() => validation.validate(field: 'email', value: email)).called(1);
+    verify(() => validation.validate(field: 'email', input: {'email': email, 'password': null})).called(1);
   });
 
   test('Should emit invalidFieldError if email is invalid', () {
@@ -107,7 +107,7 @@ void main() {
   test('Should call Validation with correct password', () {
     sut.validatePassword(password);
 
-    verify(() => validation.validate(field: 'password', value: password)).called(1);
+    verify(() => validation.validate(field: 'password', input: {'email': null, 'password': password})).called(1);
   });
 
 
