@@ -1,5 +1,3 @@
-import 'package:equatable/equatable.dart';
-
 class SurveyEntity  {
     final String id;
     final String question;
