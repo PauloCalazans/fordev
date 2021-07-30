@@ -16,12 +16,16 @@ class RemoteSurveyModel {
   });
 
   factory RemoteSurveyModel.fromJson(Map json) {
-    return RemoteSurveyModel(
-      id: json['id'],
-      question: json['question'],
-      dateTime: json['date'],
-      didAnswer: json['didAnswer'],
-    );
+    if(json.keys.toSet().containsAll(['id', 'question', 'date', 'didAnswer'])) {
+      return RemoteSurveyModel(
+        id: json['id'],
+        question: json['question'],
+        dateTime: json['date'],
+        didAnswer: json['didAnswer'],
+      );
+    }
+
+    throw HttpError.invalidData;
   }
 
   SurveyEntity toEntity() => SurveyEntity(
