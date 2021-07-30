@@ -3,4 +3,4 @@ import 'package:http/http.dart';
 import '../../../data/http/http.dart';
 import '../../../infra/http/http.dart';
 
-HttpClient makeHttpAdapter() => HttpAdapater(Client());
+HttpClient<Map?>? makeHttpAdapter() => HttpAdapater(Client());
