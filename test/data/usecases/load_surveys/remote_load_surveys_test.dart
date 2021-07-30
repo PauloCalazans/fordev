@@ -17,8 +17,8 @@ class RemoteLoadSurveys {
     try {
       final httpResponse = await httpClient.request(url: url, method: 'get');
       return httpResponse?.map((e) => RemoteSurveyModel.fromJson(e).toEntity()).toList();
-    } on HttpError {
-      throw DomainError.unexpected;
+    } on HttpError catch(error) {
+      throw error == HttpError.forbidden ? DomainError.accessDenied : DomainError.unexpected;
     }
   }
 }
@@ -117,5 +117,13 @@ void main() {
     final future = sut.load();
 
     expect(future, throwsA(DomainError.unexpected));
+  });
+
+  test('Should throw UnexpectedError if HttClient returns 403', () async {
+    mockHttpError(HttpError.forbidden);
+
+    final future = sut.load();
+
+    expect(future, throwsA(DomainError.accessDenied));
   });
 }
