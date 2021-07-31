@@ -50,13 +50,13 @@ void main() {
       await sut.request(url: url, method: 'post', body: {'any_key': 'any_value'});
 
       verify(() =>
-        client.post(
-            Uri.parse(url),
-            headers: {
-              'content-type': 'application/json',
-              'accept': 'application/json'
-            },
-            body: '{"any_key":"any_value"}'
+          client.post(
+              Uri.parse(url),
+              headers: {
+                'content-type': 'application/json',
+                'accept': 'application/json'
+              },
+              body: '{"any_key":"any_value"}'
           )
       );
     });
@@ -156,6 +156,33 @@ void main() {
       final future = sut.request(url: url, method: 'post');
 
       expect(future, throwsA(HttpError.serverError));
+    });
+  });
+
+  group('get', () {
+    When<Future<Response>> mockRequest() => when(() => client.get(any(), headers: any(named: 'headers')));
+
+    void mockResponse(int statusCode,
+        {String body = '{"any_key": "any_value"}'}) {
+      mockRequest().thenAnswer((_) async => Response(body, statusCode));
+    }
+
+    setUp(() {
+      mockResponse(200);
+    });
+
+    test('Should call get with correct values', () async {
+      await sut.request(url: url, method: 'get');
+
+      verify(() =>
+          client.get(
+              Uri.parse(url),
+              headers: {
+                'content-type': 'application/json',
+                'accept': 'application/json'
+              }
+          )
+      );
     });
   });
 }

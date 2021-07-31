@@ -22,11 +22,9 @@ class HttpAdapater implements HttpClient<Map> {
     var response = Response('', 500);
     try {
       if (method == 'post') {
-        response = await client.post(
-            Uri.parse(url),
-            headers: headers,
-            body: requestBody
-        );
+        response = await client.post(Uri.parse(url), headers: headers, body: requestBody);
+      } else if (method == 'get') {
+        response = await client.get(Uri.parse(url), headers: headers);
       }
     } catch(error) {
       throw HttpError.serverError;
