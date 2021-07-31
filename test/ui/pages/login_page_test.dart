@@ -189,7 +189,7 @@ void main() {
     mainErrorController.add(UIError.unexpected);
     await tester.pump();
 
-    expect(find.text('Algo errado aconteceu. Tente novamente em breve.'), findsOneWidget);
+    expect(find.text(UIError.unexpected.description), findsOneWidget);
   });
 
   testWidgets('Should change page', (WidgetTester tester) async {

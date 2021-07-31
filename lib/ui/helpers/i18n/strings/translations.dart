@@ -13,4 +13,5 @@ abstract class Translations {
   String get enter;
   String get login;
   String get surveys;
+  String get reload;
 }
