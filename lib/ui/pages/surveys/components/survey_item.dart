@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fordev/ui/pages/pages.dart';
 
 class SurveyItem extends StatelessWidget {
+  final SurveyViewModel viewModel;
+
+  SurveyItem(this.viewModel);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,13 +28,13 @@ class SurveyItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-                "31 julho 2021",
+                viewModel.date,
                 style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)
             ),
 
             SizedBox(height: 20),
 
-            Text("", style: TextStyle(color: Colors.white, fontSize: 20)),
+            Text(viewModel.question, style: TextStyle(color: Colors.white, fontSize: 20)),
           ],
         ),
       ),
