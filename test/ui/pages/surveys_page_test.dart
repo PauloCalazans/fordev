@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fordev/ui/helpers/errors/errors.dart';
+import 'package:fordev/ui/helpers/i18n/i18n.dart';
 import 'package:get/get.dart';
 
 import 'package:fordev/ui/pages/pages.dart';
@@ -45,8 +46,8 @@ void main() {
 
     List<SurveyViewModel> makeSurveys() {
         return [
-            SurveyViewModel(id: '1', question: 'Question 1', date: 'Any Date', didAnswer: true),
-            SurveyViewModel(id: '2', question: 'Question 2', date: 'Any Date', didAnswer: false),
+            SurveyViewModel(id: '1', question: 'Question 1', date: 'Date 1', didAnswer: true),
+            SurveyViewModel(id: '2', question: 'Question 2', date: 'Date 2', didAnswer: false),
         ];
     }
 
@@ -93,5 +94,17 @@ void main() {
         expect(find.text('Recarregar'), findsNothing);
         expect(find.text('Question 1'), findsWidgets);
         expect(find.text('Question 2'), findsWidgets);
+        expect(find.text('Date 1'), findsWidgets);
+        expect(find.text('Date 2'), findsWidgets);
+    });
+
+    testWidgets('Should call LoadSurveys on page load', (WidgetTester tester) async {
+        await loadPage(tester);
+
+        loadSurveysController.addError(UIError.unexpected.description);
+        await tester.pump();
+        await tester.tap(find.text(R.strings.reload));
+
+        verify(() => presenter.loadData()).called(2);
     });
 }
