@@ -1,34 +1,34 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'package:fordev/ui/helpers/errors/errors.dart';
 import 'package:fordev/ui/helpers/i18n/i18n.dart';
-import 'package:get/get.dart';
-
 import 'package:fordev/ui/pages/pages.dart';
-import 'package:mocktail/mocktail.dart';
 
 class SurveysPresenterSpy extends Mock implements SurveysPresenter {}
 
 void main() {
     late SurveysPresenterSpy presenter;
     late StreamController<bool> isLoadingController;
-    late StreamController<List<SurveyViewModel>?> loadSurveysController;
+    late StreamController<List<SurveyViewModel>?> surveysController;
 
     void initStreams() {
         isLoadingController = StreamController<bool>();
-        loadSurveysController = StreamController<List<SurveyViewModel>>();
+        surveysController = StreamController<List<SurveyViewModel>>();
     }
 
     void mockStreams() {
         when(() => presenter.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
-        when(() => presenter.loadSurveysStream).thenAnswer((_) => loadSurveysController.stream);
+        when(() => presenter.surveysStream).thenAnswer((_) => surveysController.stream);
     }
 
     void closeStreamns() {
         isLoadingController.close();
-        loadSurveysController.close();
+        surveysController.close();
     }
 
     Future<void> loadPage(WidgetTester tester) async {
@@ -73,10 +73,10 @@ void main() {
         expect(find.byType(CircularProgressIndicator), findsNothing);
     });
 
-    testWidgets('Should present error if loadSurveysStream fails', (WidgetTester tester) async {
+    testWidgets('Should present error if surveysStream fails', (WidgetTester tester) async {
         await loadPage(tester);
 
-        loadSurveysController.addError(UIError.unexpected.description);
+        surveysController.addError(UIError.unexpected.description);
         await tester.pump();
 
         expect(find.text(UIError.unexpected.description), findsOneWidget);
@@ -84,10 +84,10 @@ void main() {
         expect(find.text('Question 1'), findsNothing);
     });
 
-    testWidgets('Should present list if loadSurveysStream succeeds', (WidgetTester tester) async {
+    testWidgets('Should present list if surveysStream succeeds', (WidgetTester tester) async {
         await loadPage(tester);
 
-        loadSurveysController.add(makeSurveys());
+        surveysController.add(makeSurveys());
         await tester.pump();
 
         expect(find.text(UIError.unexpected.description), findsNothing);
@@ -101,7 +101,7 @@ void main() {
     testWidgets('Should call LoadSurveys on page load', (WidgetTester tester) async {
         await loadPage(tester);
 
-        loadSurveysController.addError(UIError.unexpected.description);
+        surveysController.addError(UIError.unexpected.description);
         await tester.pump();
         await tester.tap(find.text(R.strings.reload));
 
