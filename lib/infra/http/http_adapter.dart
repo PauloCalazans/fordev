@@ -4,12 +4,12 @@ import 'package:http/http.dart';
 
 import '../../data/http/http.dart';
 
-class HttpAdapater implements HttpClient<Map> {
+class HttpAdapater implements HttpClient {
   final Client client;
 
   HttpAdapater(this.client);
 
-  Future<Map?>? request({
+  Future request({
     required String url,
     required String method,
     Map? body
