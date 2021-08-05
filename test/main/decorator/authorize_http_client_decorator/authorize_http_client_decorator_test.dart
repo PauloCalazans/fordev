@@ -5,13 +5,13 @@ import 'package:test/test.dart';
 import 'package:fordev/data/http/http.dart';
 import 'package:fordev/data/cache/cache.dart';
 
-class AuthorizeHttpClientDecorator {
+class AuthorizeHttpClientDecorator implements HttpClient {
   final FetchSecureCacheStorage fetchSecureCacheStorage;
   final HttpClient decoratee;
 
   AuthorizeHttpClientDecorator({required this.fetchSecureCacheStorage, required this.decoratee});
 
-  Future<void> request({
+  Future<dynamic> request({
     required String url,
     required String method,
     Map? body,
@@ -19,7 +19,7 @@ class AuthorizeHttpClientDecorator {
   }) async {
     var token = await fetchSecureCacheStorage.fetchSecure('token');
     final authorizedHeaders = headers ?? {}..addAll({'x-access-token': token});
-    await decoratee.request(url: url, method: method, body: body, headers: authorizedHeaders);
+    return decoratee.request(url: url, method: method, body: body, headers: authorizedHeaders);
   }
 }
 
@@ -34,10 +34,21 @@ void main() {
   late Map body;
   late HttpClientSpy httpClient;
   late String token;
+  late String httpResponse;
 
   void mockToken() {
     token = faker.guid.guid();
     when(() => fetchSecureCacheStorage.fetchSecure(any())).thenAnswer((_) async => token);
+  }
+
+  void mockHttpResponse() {
+    httpResponse = faker.randomGenerator.string(50);
+    when(() => httpClient.request(
+      url: any(named: 'url'),
+      method: any(named: 'method'),
+      body: any(named: 'body'),
+      headers: any(named: 'headers')
+    )).thenAnswer((_) async => httpResponse);
   }
 
   setUp(() {
@@ -51,6 +62,7 @@ void main() {
     method = faker.randomGenerator.string(10);
     body = {'any_key': 'any_value'};
     mockToken();
+    mockHttpResponse();
   });
 
   test('Should call FetchSecureCacheStorage with correct key', () async {
@@ -73,5 +85,12 @@ void main() {
     ).called(1);
   });
 
+
+
+  test('Should return same result as decoratee', () async {
+    final response = await sut.request(url: url, method: method, body: body);
+
+    expect(response, httpResponse);
+  });
 
 }
