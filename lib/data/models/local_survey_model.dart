@@ -14,11 +14,15 @@ class LocalSurveyModel {
   });
 
   factory LocalSurveyModel.fromJson(Map json) {
+    if(!json.keys.toSet().containsAll(['id', 'question', 'date', 'didAnswer'])) {
+      throw Exception();
+    }
+
     return LocalSurveyModel(
-      id: json['id'],
-      question: json['question'],
-      dateTime: DateTime.parse(json['date']),
-      didAnswer: bool.fromEnvironment(json['didAnswer']),
+        id: json['id'],
+        question: json['question'],
+        dateTime: DateTime.parse(json['date']),
+        didAnswer: bool.fromEnvironment(json['didAnswer'])
     );
   }
 
