@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:fordev/ui/pages/pages.dart';
 
 import '../../components/components.dart';
-import 'components/components.dart';
 import '../../helpers/helpers.dart';
+import '../../../ui/pages/pages.dart';
+import 'components/components.dart';
 import 'surveys_presenter.dart';
 
 class SurveysPage extends StatelessWidget {
