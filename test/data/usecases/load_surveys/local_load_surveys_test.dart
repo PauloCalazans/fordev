@@ -1,4 +1,5 @@
 import 'package:faker/faker.dart';
+import 'package:fordev/domain/helpers/domain_error.dart';
 import 'package:test/test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -12,6 +13,7 @@ class LocalLoadSurveys {
 
   Future<List<SurveyEntity>>? load() async {
     final data = await fetchCacheStorage.fetch('surveys');
+    if(data?.isEmpty != false) throw DomainError.unexpected;
     return data.map<SurveyEntity>((json) => LocalSurveyModel.fromJson(json).toEntity()).toList();
   }
 }
@@ -25,7 +27,7 @@ class FetchCacheStorageSpy extends Mock implements FetchCacheStorage { }
 void main() {
   late FetchCacheStorageSpy fetchCacheStorage;
   late LocalLoadSurveys sut;
-  late List<Map> data;
+  List<Map>? data;
 
   List<Map> mockValidData() => [
     {
@@ -42,7 +44,7 @@ void main() {
     }
   ];
 
-  void mockFetch(List<Map> list) {
+  void mockFetch(List<Map>? list) {
     data = list;
     when(() => fetchCacheStorage.fetch(any())).thenAnswer((_) async => data);
   }
@@ -63,8 +65,18 @@ void main() {
     final surveys = await sut.load();
 
     expect(surveys, [
-      SurveyEntity(id: data[0]['id']!, question: data[0]['question']!, dateTime: DateTime.utc(2021, 08, 05), didAnswer: false),
-      SurveyEntity(id: data[1]['id']!, question: data[1]['question']!, dateTime: DateTime.utc(2021, 05, 12), didAnswer: true),
+      SurveyEntity(id: data![0]['id']!, question: data![0]['question']!, dateTime: DateTime.utc(2021, 08, 05), didAnswer: false),
+      SurveyEntity(id: data![1]['id']!, question: data![1]['question']!, dateTime: DateTime.utc(2021, 05, 12), didAnswer: true),
     ]);
+  });
+
+  test('Should throw UnexpectedError if cache is empty or null', () async {
+    mockFetch([]);
+    final future = sut.load();
+    expect(future, throwsA(DomainError.unexpected));
+
+    mockFetch(null);
+    final future2 = sut.load();
+    expect(future2, throwsA(DomainError.unexpected));
   });
 }
