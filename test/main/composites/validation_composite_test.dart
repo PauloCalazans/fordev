@@ -1,8 +1,8 @@
 import 'package:test/test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:fordev/main/composites/composites.dart';
 import 'package:fordev/presentation/presenters/dependencies/dependencies.dart';
-import 'package:fordev/validation/validators/validators.dart';
 import 'package:fordev/validation/dependencies/dependencies.dart';
 
 class MockFieldValidation extends Mock implements FieldValidation {}

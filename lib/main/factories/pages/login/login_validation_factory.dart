@@ -1,6 +1,6 @@
 import '../../../../validation/dependencies/dependencies.dart';
 import '../../../../presentation/presenters/presenters.dart';
-import '../../../../validation/validators/validators.dart';
+import '../../../composites/composites.dart';
 import '../../../builders/builders.dart';
 
 Validation makeLoginValidation() {
