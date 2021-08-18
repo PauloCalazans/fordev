@@ -22,7 +22,7 @@ void main() {
     SurveyEntity(id: faker.guid.guid(), question: faker.lorem.sentence(), dateTime: DateTime(2021, 07, 31), didAnswer: true),
     SurveyEntity(id: faker.guid.guid(), question: faker.lorem.sentence(), dateTime: DateTime(2020, 05, 30), didAnswer: true)  ];
 
-  When mockLoadSurveysCall() => when(() => loadSurveys.load());
+  When mockLoadSurveysCall() => when(() => loadSurveys.loadBySurvey());
 
   void mockLoadSurveys(List<SurveyEntity> data) {
     surveys = data;
@@ -40,7 +40,7 @@ void main() {
   test('Should call LoadSurveys on loadData', () async {
     await sut.loadData();
 
-    verify(() => loadSurveys.load()).called(1);
+    verify(() => loadSurveys.loadBySurvey()).called(1);
   });
 
   test('Should emit correct events on success', () async {

@@ -21,7 +21,7 @@ class GetxSurveysPresenter implements SurveysPresenter {
   Future<void>? loadData() async {
     try {
       _isLoading.value = true;
-      final surveys = await loadSurveys.load();
+      final surveys = await loadSurveys.loadBySurvey();
       _surveys.value = surveys!.map((survey) =>
           SurveyViewModel(
               id: survey.id,
