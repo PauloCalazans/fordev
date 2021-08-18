@@ -69,14 +69,16 @@ void main() {
   group('fetch', () {
     late String result;
 
-    When mockFetchCall() => when(() => localStorage.getItem(any()));
+    When mockFetchCall() {
+      result = faker.randomGenerator.string(50);
+      return when(() => localStorage.getItem(any()));
+    }
 
     void mockFetch() => mockFetchCall().thenAnswer((_) async => result);
 
     void mockFetchError() => mockFetchCall().thenThrow(Exception());
 
     setUp(() {
-      result = '';
       mockFetch();
     });
 

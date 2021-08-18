@@ -23,9 +23,9 @@ class HttpAdapater implements HttpClient {
     var response = Response('', 500);
     try {
       if (method == 'post') {
-        response = await client.post(Uri.parse(url), headers: defaultHeaders, body: requestBody);
+        response = await client.post(Uri.parse(url), headers: defaultHeaders, body: requestBody).timeout(Duration(seconds: 10));
       } else if (method == 'get') {
-        response = await client.get(Uri.parse(url), headers: defaultHeaders);
+        response = await client.get(Uri.parse(url), headers: defaultHeaders).timeout(Duration(seconds: 10));
       }
     } catch(error) {
       throw HttpError.serverError;

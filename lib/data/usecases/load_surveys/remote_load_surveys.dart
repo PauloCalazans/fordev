@@ -5,7 +5,7 @@ import '../../../domain/usecases/usecases.dart';
 import '../../http/http.dart';
 import '../../models/models.dart';
 
-class RemoteLoadSurveys implements LoadSurveys{
+class RemoteLoadSurveys implements LoadSurveys {
   final String url;
   final HttpClient httpClient;
 
