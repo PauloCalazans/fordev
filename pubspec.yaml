@@ -20,6 +20,7 @@ dependencies:
   intl:
 
 dev_dependencies:
+  network_image_mock:
   flutter_launcher_icons:
   flutter_test:
     sdk: flutter

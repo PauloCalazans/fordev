@@ -1,72 +1,91 @@
 import 'package:flutter/material.dart';
 
+import '../../components/components.dart';
 import '../../helpers/helpers.dart';
+import 'survey_result.dart';
 
 class SurveyResultPage extends StatelessWidget {
+  final SurveyResultPresenter? presenter;
+
+  SurveyResultPage(this.presenter);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(R.strings.surveys)),
-      body: ListView.builder(
-        itemCount: 4,
-        itemBuilder: (context, index) {
-          if(index == 0) {
-            return Container(
-              padding: const EdgeInsets.only(top: 40, bottom: 20, left: 20, right: 20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).disabledColor.withAlpha(90)
-              ),
-                child: Text('')
-            );
-          }
+      body: Builder(
+        builder: (context) {
+          presenter!.isLoadingStream.listen((isLoading) {
+            if(isLoading == true) {
+              showLoading(context);
+            } else {
+              hideLoading(context);
+            }
+          });
 
-          return Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).backgroundColor
-                  ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          presenter!.loadData();
+
+          return ListView.builder(
+              itemCount: 4,
+              itemBuilder: (context, index) {
+                if(index == 0) {
+                  return Container(
+                      padding: const EdgeInsets.only(top: 40, bottom: 20, left: 20, right: 20),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).disabledColor.withAlpha(90)
+                      ),
+                      child: Text('')
+                  );
+                }
+
+                return Column(
                   children: [
-                    Image.network(
-                      '',
-                      width: 40,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          'Answer',
-                          style: TextStyle(fontSize: 16),
+                    Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).backgroundColor
                         ),
-                      ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Image.network(
+                              '',
+                              width: 40,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(
+                                  'Answer',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ),
+                            Text(
+                              '',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColorDark
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Icon(
+                                Icons.check_circle,
+                                color: Theme.of(context).disabledColor,
+                              ),
+                            )
+                          ],
+                        )
                     ),
-                    Text(
-                      '',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColorDark
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Icon(
-                        Icons.check_circle,
-                        color: Theme.of(context).disabledColor,
-                      ),
-                    )
-                  ],
-                )
-              ),
 
-              Divider(height: 1)
-            ],
+                    Divider(height: 1)
+                  ],
+                );
+              }
           );
-        }
+        },
       ),
     );
   }
