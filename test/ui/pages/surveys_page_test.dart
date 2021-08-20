@@ -98,7 +98,7 @@ void main() {
         expect(find.text('Date 2'), findsWidgets);
     });
 
-    testWidgets('Should call LoadSurveys on page load', (WidgetTester tester) async {
+    testWidgets('Should call LoadSurveys on reload button click', (WidgetTester tester) async {
         await loadPage(tester);
 
         surveysController.addError(UIError.unexpected.description);
