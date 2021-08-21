@@ -16,7 +16,7 @@ void main() {
   late String token;
 
   When mockFetchSecureCall() {
-    return when(() => fetchSecureCacheStorage.fetchSecure(any()));
+    return when(() => fetchSecureCacheStorage.fetch(any()));
   }
 
   void mockFetchSecure() {
@@ -37,7 +37,7 @@ void main() {
   test('Should call FetchSecureCacheStorage with correct value', () async {
     await sut.load();
 
-      verify(() => fetchSecureCacheStorage.fetchSecure('token'));
+      verify(() => fetchSecureCacheStorage.fetch('token'));
   });
 
   test('Should return an AccoutnEntity', () async {

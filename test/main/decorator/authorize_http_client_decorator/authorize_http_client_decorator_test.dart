@@ -7,10 +7,12 @@ import 'package:fordev/data/cache/cache.dart';
 import 'package:fordev/main/decorators/decorators.dart';
 
 class FetchSecureCacheStorageSpy extends Mock implements FetchSecureCacheStorage {}
+class DeleteSecureCacheStorageSpy extends Mock implements DeleteSecureCacheStorage {}
 class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
   late FetchSecureCacheStorageSpy fetchSecureCacheStorage;
+  late DeleteSecureCacheStorageSpy deleteSecureCacheStorage;
   late AuthorizeHttpClientDecorator sut;
   late String url;
   late String method;
@@ -19,7 +21,7 @@ void main() {
   late String token;
   late String httpResponse;
 
-  When mockTokenCall() => when(() => fetchSecureCacheStorage.fetchSecure(any()));
+  When mockTokenCall() => when(() => fetchSecureCacheStorage.fetch(any()));
 
   void mockToken() {
     token = faker.guid.guid();
@@ -48,9 +50,11 @@ void main() {
 
   setUp(() {
     fetchSecureCacheStorage = FetchSecureCacheStorageSpy();
+    deleteSecureCacheStorage = DeleteSecureCacheStorageSpy();
     httpClient = HttpClientSpy();
     sut = AuthorizeHttpClientDecorator(
       fetchSecureCacheStorage: fetchSecureCacheStorage,
+      deleteSecureCacheStorage: deleteSecureCacheStorage,
       decoratee: httpClient
     );
     url = faker.internet.httpUrl();
@@ -63,7 +67,7 @@ void main() {
   test('Should call FetchSecureCacheStorage with correct key', () async {
     await sut.request(url: url, method: method, body: body);
 
-    verify(() => fetchSecureCacheStorage.fetchSecure('token')).called(1);
+    verify(() => fetchSecureCacheStorage.fetch('token')).called(1);
   });
 
   test('Should call decoratee with access token on header', () async {
@@ -92,6 +96,7 @@ void main() {
     final future = sut.request(url: url, method: method, body: body);
 
     expect(future, throwsA(HttpError.forbidden));
+    verify(() => deleteSecureCacheStorage.delete('token')).called(1);
   });
 
   test('Should rethrow if decoratee throws', () {
@@ -100,6 +105,16 @@ void main() {
     final future = sut.request(url: url, method: method, body: body);
 
     expect(future, throwsA(HttpError.badRequest));
+  });
+
+  test('Should delete cache if request throws ForbiddenError', () async {
+    mockHttpResponseError(HttpError.forbidden);
+
+    final future = sut.request(url: url, method: method, body: body);
+    await untilCalled(() => deleteSecureCacheStorage.delete('token'));
+
+    expect(future, throwsA(HttpError.forbidden));
+    verify(() => deleteSecureCacheStorage.delete('token')).called(1);
   });
 
 }
