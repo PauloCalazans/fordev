@@ -5,7 +5,7 @@ import '../../helpers/helpers.dart';
 import 'survey_result.dart';
 
 class SurveyResultPage extends StatelessWidget {
-  final SurveyResultPresenter? presenter;
+  final SurveyResultPresenter presenter;
 
   SurveyResultPage(this.presenter);
 
@@ -15,7 +15,7 @@ class SurveyResultPage extends StatelessWidget {
       appBar: AppBar(title: Text(R.strings.surveys)),
       body: Builder(
         builder: (context) {
-          presenter!.isLoadingStream.listen((isLoading) {
+          presenter.isLoadingStream.listen((isLoading) {
             if(isLoading == true) {
               showLoading(context);
             } else {
@@ -23,10 +23,10 @@ class SurveyResultPage extends StatelessWidget {
             }
           });
 
-          presenter!.loadData();
+          presenter.loadData();
 
           return StreamBuilder<SurveyResultViewModel?>(
-            stream: presenter!.surveyResultStream,
+            stream: presenter.surveyResultStream,
             builder: (context, snapshot) {
               if(snapshot.hasError) {
                 return ReloadScreen(
