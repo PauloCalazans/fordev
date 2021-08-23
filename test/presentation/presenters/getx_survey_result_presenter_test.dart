@@ -38,6 +38,7 @@ void main() {
   );
 
   When mockLoadSurveyResultCall() => when(() => loadSurveyResult.loadBySurvey(surveyId: any(named: 'surveyId')));
+  void mockAccessDeniedError() => mockLoadSurveyResultCall().thenThrow(DomainError.accessDenied);
 
   void mockLoadSurveyResult(SurveyResultEntity data) {
     surveyResult = data;
@@ -95,11 +96,20 @@ void main() {
     await sut.loadData();
   });
 
-  test('Should call LoadSurveys on failure', () async {
+  test('Should emits correct event on failure', () async {
     mockLoadSurveyResultError();
 
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
     sut.surveyResultStream.listen(null, onError: expectAsync1((error) => expect(error, UIError.unexpected.description)));
+
+    await sut.loadData();
+  });
+
+  test('Should emit correct events on access denied', () async {
+    mockAccessDeniedError();
+
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+    expectLater(sut.isSessionExpiredStream, emits(true));
 
     await sut.loadData();
   });
