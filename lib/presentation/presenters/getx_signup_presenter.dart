@@ -1,5 +1,3 @@
-import 'package:fordev/presentation/mixins/form_manager.dart';
-import 'package:fordev/presentation/mixins/mixins.dart';
 import 'package:fordev/ui/pages/pages.dart';
 import 'package:get/get.dart';
 
@@ -8,7 +6,7 @@ import '../../domain/usecases/usecases.dart';
 import '../../ui/helpers/errors/errors.dart';
 import '../presenters/dependencies/dependencies.dart';
 
-import '../mixins/loading_manager.dart';
+import '../mixins/mixins.dart';
 
 class GetxSignUpPresenter extends GetxController with LoadingManager, FormManager, NavigationManager, MainErrorManager implements SignUpPresenter {
   final Validation validation;
