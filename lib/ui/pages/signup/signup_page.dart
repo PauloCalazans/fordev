@@ -5,47 +5,26 @@ import 'package:provider/provider.dart';
 import '../../helpers/helpers.dart';
 import '../../components/components.dart';
 import 'components/components.dart';
+import '../../mixins/mixins.dart';
 import 'signup_presenter.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatelessWidget with KeyboardManager, LoadingManager, MainErrorManager, NavigationManager {
   final SignUpPresenter presenter;
 
   const SignUpPage(this.presenter);
 
   @override
   Widget build(BuildContext context) {
-    void _hideKeyboard() {
-      final currentFocus = FocusScope.of(context);
-      if(!currentFocus.hasPrimaryFocus) {
-        currentFocus.unfocus();
-      }
-    }
+
     return Scaffold(
       body: Builder(
           builder: (context) {
-
-            presenter.isLoadingStream!.listen((isLoading) {
-              if(isLoading == true) {
-                showLoading(context);
-              } else {
-                hideLoading(context);
-              }
-            });
-
-            presenter.mainErrorStream!.listen((error) {
-              if (error != null) {
-                showErrorMessage(context, error.description);
-              }
-            });
-
-            presenter.navigateToStream!.listen((page) {
-              if (page?.isNotEmpty == true) {
-                Get.offAllNamed(page!);
-              }
-            });
+            handleLoading(presenter.isLoadingStream, context);
+            handleError(presenter.mainErrorStream, context);
+            handleNavigation(presenter.navigateToStream, clear: true);
 
             return GestureDetector(
-              onTap: () => _hideKeyboard,
+              onTap: () => hideKeyboard(context),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
