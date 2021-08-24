@@ -4,10 +4,11 @@ import '../../ui/helpers/errors/errors.dart';
 import '../../ui/pages/pages.dart';
 import '../../domain/helpers/helpers.dart';
 import '../../domain/usecases/usecases.dart';
+import '../mixins/mixins.dart';
 
 import '../presenters/dependencies/dependencies.dart';
 
-class GetxLoginPresenter extends GetxController implements LoginPresenter {
+class GetxLoginPresenter extends GetxController with LoadingManager, NavigationManager, MainErrorManager, FormManager implements LoginPresenter {
   GetxLoginPresenter({required this.validation, required this.authentication, required this.saveCurrentAccount});
 
   final Validation validation;
@@ -19,17 +20,9 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
 
   var _emailError = Rxn<UIError>(null);
   var _passwordError = Rxn<UIError>(null);
-  var _mainError = Rxn<UIError>(null);
-  var _navigateTo = RxnString(null);
-  var _isFormValid = false.obs;
-  var _isLoading = false.obs;
 
   Stream<UIError?>? get emailErrorStream => _emailError.stream;
   Stream<UIError?>? get passwordErrorStream => _passwordError.stream;
-  Stream<UIError?>? get mainErrorStream => _mainError.stream;
-  Stream<String?>? get navigateToStream => _navigateTo.stream;
-  Stream<bool?> get isFormValidStream => _isFormValid.stream;
-  Stream<bool?> get isLoadingStream => _isLoading.stream;
 
   void validateEmail(String email) {
     _email = email;
@@ -54,27 +47,27 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
   }
 
   void _validateForm() {
-    _isFormValid.value = _emailError.value == null && _passwordError.value == null && _email != null && _password != null;
+    isFormValid = _emailError.value == null && _passwordError.value == null && _email != null && _password != null;
   }
 
   Future<void> auth() async {
     try {
-      _mainError.value = null;
-      _isLoading.value = true;
+      mainError = null;
+      isLoading = true;
       var accountEntity = await authentication.auth(AuthenticationParams(email: _email!, secret: _password!));
       await saveCurrentAccount.save(accountEntity);
-      _navigateTo.value = '/surveys';
+      navigateTo = '/surveys';
     } on DomainError catch (error) {
       switch(error) {
-        case DomainError.invalidCredentials: _mainError.value = UIError.invalidCredentials; break;
-        default: _mainError.value = UIError.unexpected; break;
+        case DomainError.invalidCredentials: mainError = UIError.invalidCredentials; break;
+        default: mainError = UIError.unexpected; break;
       }
 
-      _isLoading.value = false;
+      isLoading = false;
     }
   }
 
   Future<void>? goToSignUp() {
-    _navigateTo.value = '/signup';
+    navigateTo = '/signup';
   }
 }
