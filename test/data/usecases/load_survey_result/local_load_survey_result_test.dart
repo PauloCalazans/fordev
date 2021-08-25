@@ -1,0 +1,127 @@
+import 'package:faker/faker.dart';
+import 'package:test/test.dart';
+import 'package:mocktail/mocktail.dart';
+
+import 'package:fordev/data/cache/cache.dart';
+import 'package:fordev/data/usecases/usecases.dart';
+
+import 'package:fordev/domain/helpers/helpers.dart';
+import 'package:fordev/domain/entities/entities.dart';
+
+class CacheStorageSpy extends Mock implements CacheStorage { }
+
+void main() {
+  group('loadBySurvey', () {
+    late CacheStorageSpy cacheStorage;
+    late LocalLoadSurveyResult sut;
+    Map? data;
+    late String surveyId;
+
+    Map mockValidData() => {
+      'surveyId': faker.guid.guid(),
+      'question': faker.lorem.sentence(),
+      'answers': [
+        {
+          'image': faker.internet.httpUrl(),
+          'answer': faker.lorem.sentence(),
+          'isCurrentAnswer': 'true',
+          'percent': '40'
+        },
+        {
+          'answer': faker.lorem.sentence(),
+          'isCurrentAnswer': 'false',
+          'percent': '60'
+        }
+      ]
+    };
+
+    When mockFetchCall() =>  when(() => cacheStorage.fetch(any()));
+
+    void mockFetch(Map? json) {
+      data = json;
+      mockFetchCall().thenAnswer((_) async => data);
+    }
+
+    void mockFetchError() => mockFetchCall().thenThrow(Exception());
+
+    setUp(() {
+      surveyId = faker.guid.guid();
+      cacheStorage = CacheStorageSpy();
+      sut = LocalLoadSurveyResult(cacheStorage: cacheStorage);
+      mockFetch(mockValidData());
+    });
+
+    test('Should call CacheStorage with correct key', () async {
+      await sut.loadBySurvey(surveyId: surveyId);
+
+      verify(() => cacheStorage.fetch('survey_result/$surveyId')).called(1);
+    });
+
+    test('Should return surveyResult on success', () async {
+      final surveyResult = await sut.loadBySurvey(surveyId: surveyId);
+
+      expect(surveyResult, [
+        SurveyResultEntity(
+          surveyId: data!['surveyId'],
+          question: data!['question'],
+          answers: [
+          SurveyAnswerEntity(
+              image: data!['answers'][0]['image'],
+              answer: data!['answers'][0]['answer'],
+              percent: 40,
+              isCurrentAnswer: true
+          ),
+          SurveyAnswerEntity(
+              answer: data!['answers'][1].answer,
+              percent: 60,
+              isCurrentAnswer: false
+          )
+        ])
+      ]);
+    });
+
+    test('Should throw UnexpectedError if cache is empty or null', () async {
+      mockFetch({});
+      final future = sut.loadBySurvey(surveyId: surveyId);
+      expect(future, throwsA(DomainError.unexpected));
+
+      mockFetch(null);
+      final future2 = sut.loadBySurvey(surveyId: surveyId);
+      expect(future2, throwsA(DomainError.unexpected));
+    });
+
+    test('Should throw UnexpectedError if cache is invalid', () async {
+      mockFetch({
+        'surveyId': faker.guid.guid(),
+        'question': faker.lorem.sentence(),
+        'answers': [
+          {
+            'image': faker.internet.httpUrl(),
+            'answer': faker.lorem.sentence(),
+            'isCurrentAnswer': 'invalid bool',
+            'percent': 'invalid int'
+          }
+        ]
+      });
+      final future = sut.loadBySurvey(surveyId: surveyId);
+
+      expect(future, throwsA(DomainError.unexpected));
+    });
+
+    test('Should throw UnexpectedError if cache is incomplete', () async {
+      mockFetch({
+        'surveyId': faker.guid.guid()
+      });
+      final future = sut.loadBySurvey(surveyId: surveyId);
+
+      expect(future, throwsA(DomainError.unexpected));
+    });
+
+    test('Should throw UnexpectedError if cache throws', () async {
+      mockFetchError();
+      final future = sut.loadBySurvey(surveyId: surveyId);
+
+      expect(future, throwsA(DomainError.unexpected));
+    });
+  });
+}
