@@ -331,13 +331,13 @@ void main() {
     sut.validatePassword(password);
     sut.validatePasswordConfirmation(passwordConfirmation);
 
-    sut.navigateToStream!.listen(expectAsync1((page) => expect(page, '/surveys')));
+    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/surveys')));
 
     await sut.signUp();
   });
 
   test('Should go to Login on link click', () async {
-    sut.navigateToStream!.listen(expectAsync1((page) => expect(page, '/login')));
+    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/login')));
     sut.goToLogin();
   });
 }

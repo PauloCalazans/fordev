@@ -21,7 +21,7 @@ class GetxSurveysPresenter extends GetxController with SessionManager, LoadingMa
   Future<void>? loadData() async {
     try {
       isLoading = true;
-      final surveys = await loadSurveys.loadBySurvey();
+      final surveys = await loadSurveys.load();
       _surveys.value = surveys!.map((survey) =>
           SurveyViewModel(
               id: survey.id,

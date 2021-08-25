@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-import '../../helpers/helpers.dart';
 import '../../components/components.dart';
-import 'components/components.dart';
+import '../../helpers/helpers.dart';
 import '../../mixins/mixins.dart';
+import 'components/components.dart';
 import 'signup_presenter.dart';
 
 class SignUpPage extends StatelessWidget with KeyboardManager, LoadingManager, MainErrorManager, NavigationManager {

@@ -28,7 +28,7 @@ void main() {
     )
   ];
 
-  When mockRemoteLoadCall() => when(() => remote.loadBySurvey());
+  When mockRemoteLoadCall() => when(() => remote.load());
 
   void mockRemoteLoad() {
     remoteSurveys = mockSurveys();
@@ -37,7 +37,7 @@ void main() {
 
   void mockRemoteLoadError(DomainError error) => mockRemoteLoadCall().thenThrow(error);
 
-  When mockLocalLoadCall() => when(() => local.loadBySurvey());
+  When mockLocalLoadCall() => when(() => local.load());
 
   void mockLocalLoad() {
     localSurveys = mockSurveys();
@@ -55,19 +55,19 @@ void main() {
   });
 
   test('Should call remote load', () async {
-    await sut.loadBySurvey();
+    await sut.load();
 
-    verify(() => remote.loadBySurvey()).called(1);
+    verify(() => remote.load()).called(1);
   });
 
   test('Should call local save with remote surveys', () async {
-    await sut.loadBySurvey();
+    await sut.load();
 
     verify(() => local.save(remoteSurveys)).called(1);
   });
 
   test('Should return remote data', () async {
-    final surveys = await sut.loadBySurvey();
+    final surveys = await sut.load();
 
     expect(surveys, remoteSurveys);
   });
@@ -75,7 +75,7 @@ void main() {
   test('Should rethrow if remote load throws AccessDeniedError', () async {
     mockRemoteLoadError(DomainError.accessDenied);
 
-    final future = sut.loadBySurvey();
+    final future = sut.load();
 
     expect(future, throwsA(DomainError.accessDenied));
   });
@@ -83,16 +83,16 @@ void main() {
   test('Should call local fetch on remote error', () async {
     mockRemoteLoadError(DomainError.unexpected);
 
-    await sut.loadBySurvey();
+    await sut.load();
 
     verify(() => local.validate()).called(1);
-    verify(() => local.loadBySurvey()).called(1);
+    verify(() => local.load()).called(1);
   });
 
   test('Should return local surveys', () async {
     mockRemoteLoadError(DomainError.unexpected);
 
-    final surveys = await sut.loadBySurvey();
+    final surveys = await sut.load();
 
     expect(surveys, localSurveys);
   });
@@ -101,7 +101,7 @@ void main() {
     mockRemoteLoadError(DomainError.unexpected);
     mockLocalLoadError();
 
-    final future = sut.loadBySurvey();
+    final future = sut.load();
 
     expect(future, throwsA(DomainError.unexpected));
   });

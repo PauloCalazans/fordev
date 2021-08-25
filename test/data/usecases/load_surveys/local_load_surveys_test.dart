@@ -47,13 +47,13 @@ void main() {
     });
 
     test('Should call CacheStorage with correct key', () async {
-      await sut.loadBySurvey();
+      await sut.load();
 
       verify(() => cacheStorage.fetch('surveys')).called(1);
     });
 
     test('Should return a list of surveys on success', () async {
-      final surveys = await sut.loadBySurvey();
+      final surveys = await sut.load();
 
       expect(surveys, [
         SurveyEntity(id: data![0]['id']!, question: data![0]['question']!, dateTime: DateTime.utc(2021, 08, 05), didAnswer: false),
@@ -63,11 +63,11 @@ void main() {
 
     test('Should throw UnexpectedError if cache is empty or null', () async {
       mockFetch([]);
-      final future = sut.loadBySurvey();
+      final future = sut.load();
       expect(future, throwsA(DomainError.unexpected));
 
       mockFetch(null);
-      final future2 = sut.loadBySurvey();
+      final future2 = sut.load();
       expect(future2, throwsA(DomainError.unexpected));
     });
 
@@ -78,7 +78,7 @@ void main() {
         'date': 'invalid date',
         'didAnswer': 'true'
       }]);
-      final future = sut.loadBySurvey();
+      final future = sut.load();
 
       expect(future, throwsA(DomainError.unexpected));
     });
@@ -88,14 +88,14 @@ void main() {
         'date': DateTime.utc(2021, 08, 05),
         'didAnswer': 'true'
       }]);
-      final future = sut.loadBySurvey();
+      final future = sut.load();
 
       expect(future, throwsA(DomainError.unexpected));
     });
 
-    test('Should throw UnexpectedError if cache is incomplete', () async {
+    test('Should throw UnexpectedError if cache throws', () async {
       mockFetchError();
-      final future = sut.loadBySurvey();
+      final future = sut.load();
 
       expect(future, throwsA(DomainError.unexpected));
     });
@@ -166,7 +166,7 @@ void main() {
       verify(() => cacheStorage.delete('surveys')).called(1);
     });
 
-    test('Should delete cache if it is incomplete', () async {
+    test('Should delete cache if fetch fails', () async {
       mockFetchError();
 
       await sut.validate();

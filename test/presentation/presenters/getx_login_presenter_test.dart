@@ -188,7 +188,7 @@ void main() {
     sut.validateEmail(email);
     sut.validatePassword(password);
 
-    sut.navigateToStream!.listen(expectAsync1((page) => expect(page, '/surveys')));
+    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/surveys')));
 
     await sut.auth();
   });
@@ -216,7 +216,7 @@ void main() {
   });
 
   test('Should go to SignUpPage on link click', () async {
-    sut.navigateToStream!.listen(expectAsync1((page) => expect(page, '/signup')));
+    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/signup')));
     sut.goToSignUp();
   });
 }
