@@ -132,7 +132,7 @@ void main() {
     });
   });
 
-  group('save', () {
+  group ('save', () {
     test('Should call SaveSurveyResult on save', () async {
       await sut.save(answer: answer);
 
