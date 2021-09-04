@@ -17,9 +17,10 @@ class SuveyResult extends StatelessWidget {
             return SurveyHeader(viewModel.question);
           }
 
+          final answer = viewModel.answers[index - 1];
           return InkWell(
-            onTap: () => onSave(answer: viewModel.answers[index - 1].answer),
-            child: SurveyAnswer(viewModel.answers[index - 1])
+            onTap: () => answer.isCurrentAnswer ? null : onSave(answer: answer.answer),
+            child: SurveyAnswer(answer)
           );
         }
     );
