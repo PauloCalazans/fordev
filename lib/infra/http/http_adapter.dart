@@ -25,6 +25,8 @@ class HttpAdapater implements HttpClient {
       late Future<Response> futureResponse;
       if (method == 'post') {
         futureResponse = client.post(Uri.parse(url), headers: defaultHeaders, body: requestBody);
+      } else if (method == 'put') {
+        futureResponse = client.put(Uri.parse(url), headers: defaultHeaders, body: requestBody);
       } else if (method == 'get') {
         futureResponse = client.get(Uri.parse(url), headers: defaultHeaders);
       }
