@@ -4,8 +4,9 @@ import 'components.dart';
 
 class SuveyResult extends StatelessWidget {
   final SurveyResultViewModel viewModel;
+  final void Function({required String answer}) onSave;
 
-  SuveyResult(this.viewModel);
+  SuveyResult({required this.viewModel, required this.onSave});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,10 @@ class SuveyResult extends StatelessWidget {
             return SurveyHeader(viewModel.question);
           }
 
-          return SurveyAnswer(viewModel.answers[index - 1]);
+          return InkWell(
+            onTap: () => onSave(answer: viewModel.answers[index - 1].answer),
+            child: SurveyAnswer(viewModel.answers[index - 1])
+          );
         }
     );
   }

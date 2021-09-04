@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fordev/ui/pages/survey_result/components/components.dart';
 import 'package:get/get.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import 'package:fordev/ui/helpers/helpers.dart';
+import 'package:fordev/ui/pages/survey_result/components/components.dart';
 import 'package:fordev/ui/pages/pages.dart';
 
 class SurveyResultPresenterSpy extends Mock implements SurveyResultPresenter {}
@@ -149,5 +149,15 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(Get.currentRoute, '/survey_result/any_survey_id');
+    });
+
+    testWidgets('Should call save on list item click', (WidgetTester tester) async {
+        await loadPage(tester);
+
+        surveyResultController.add(makeSurveyResult());
+        await mockNetworkImagesFor(() async => await tester.pump());
+        await tester.tap(find.text('Answer 1'));
+
+        verify(() => presenter.save(answer: 'Answer 1')).called(1);
     });
 }
