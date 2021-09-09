@@ -8,7 +8,9 @@ import 'package:network_image_mock/network_image_mock.dart';
 import 'package:fordev/ui/helpers/helpers.dart';
 import 'package:fordev/ui/pages/survey_result/components/components.dart';
 import 'package:fordev/ui/pages/pages.dart';
+
 import '../helpers/helpers.dart';
+import '../../mocks/mocks.dart';
 
 class SurveyResultPresenterSpy extends Mock implements SurveyResultPresenter {}
 
@@ -50,24 +52,6 @@ void main() {
             );
         });
     }
-    
-    SurveyResultViewModel makeSurveyResult() => SurveyResultViewModel(
-        surveyId: 'Any id', 
-        question: 'Question', 
-        answers: [
-            SurveyAnswerViewModel(
-                image: 'Image 0',
-                answer: 'Answer 0',
-                isCurrentAnswer: true,
-                percent: '60%'
-            ),
-            SurveyAnswerViewModel(
-                answer: 'Answer 1',
-                isCurrentAnswer: false,
-                percent: '40%'
-            )
-        ]
-    );
 
     tearDown(() {
         closeStreamns();
@@ -116,7 +100,7 @@ void main() {
     testWidgets('Should present valid data if surveysStream succeeds', (WidgetTester tester) async {
         await loadPage(tester);
 
-        surveyResultController.add(makeSurveyResult());
+        surveyResultController.add(FakeSurveyResultFactory.makeViewModel());
         await mockNetworkImagesFor(() async => await tester.pump());
 
         expect(find.text(UIError.unexpected.description), findsNothing);
@@ -154,7 +138,7 @@ void main() {
     testWidgets('Should call save on list item click', (WidgetTester tester) async {
         await loadPage(tester);
 
-        surveyResultController.add(makeSurveyResult());
+        surveyResultController.add(FakeSurveyResultFactory.makeViewModel());
         await mockNetworkImagesFor(() async => await tester.pump());
         await tester.tap(find.text('Answer 1'));
 
@@ -164,7 +148,7 @@ void main() {
     testWidgets('Should not call save on current answer click', (WidgetTester tester) async {
         await loadPage(tester);
 
-        surveyResultController.add(makeSurveyResult());
+        surveyResultController.add(FakeSurveyResultFactory.makeViewModel());
         await mockNetworkImagesFor(() async => await tester.pump());
         await tester.tap(find.text('Answer 0'));
 

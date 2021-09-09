@@ -7,6 +7,8 @@ import 'package:fordev/data/usecases/usecases.dart';
 import 'package:fordev/domain/entities/entities.dart';
 import 'package:fordev/domain/helpers/helpers.dart';
 
+import '../../../mocks/mocks.dart';
+
 class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
@@ -15,27 +17,6 @@ void main() {
   late HttpClientSpy httpClient;
   late String answer;
   late Map surveyResult;
-
-  Map mockValidData() => {
-    'surveyId': faker.guid.guid(),
-    'question': faker.randomGenerator.string(50),
-    'date': faker.date.dateTime().toIso8601String(),
-    'answers': [
-      {
-        'image': faker.internet.httpUrl(),
-        'answer': faker.randomGenerator.string(20),
-        'percent': faker.randomGenerator.integer(100),
-        'count': faker.randomGenerator.integer(100),
-        'isCurrentAccountAnswer': faker.randomGenerator.boolean()
-      },
-      {
-        'answer': faker.randomGenerator.string(20),
-        'percent': faker.randomGenerator.integer(100),
-        'count': faker.randomGenerator.integer(100),
-        'isCurrentAccountAnswer': faker.randomGenerator.boolean()
-      }
-    ]
-  };
 
   When mockRequest() => when(() =>
       httpClient.request(
@@ -59,8 +40,7 @@ void main() {
     answer = faker.lorem.sentence();
     httpClient = HttpClientSpy();
     sut = RemoteSaveSurveyResult(url: url, httpClient: httpClient);
-    surveyResult = mockValidData();
-    mockHttpData(surveyResult);
+    mockHttpData(FakeSurveyResultFactory.makeApiJson());
   });
 
   test('Should call HttpClient with correct values', () async {
@@ -92,7 +72,7 @@ void main() {
   });
 
   test('Should throw UnexpectedErro if HttpClient returns 200 with invalid data', () async {
-    mockHttpData({'invalid_key': 'invalid_value'});
+    mockHttpData(FakeSurveyResultFactory.makeInvalidApiJson());
 
     final result = sut.save(answer: answer);
 

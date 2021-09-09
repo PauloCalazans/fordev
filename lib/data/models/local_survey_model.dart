@@ -22,7 +22,7 @@ class LocalSurveyModel {
         id: json['id'],
         question: json['question'],
         dateTime: DateTime.parse(json['date']),
-        didAnswer: bool.fromEnvironment(json['didAnswer'])
+        didAnswer: json['didAnswer'].toLowerCase() == 'true'
     );
   }
 

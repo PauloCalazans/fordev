@@ -7,7 +7,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fordev/ui/helpers/errors/errors.dart';
 import 'package:fordev/ui/helpers/i18n/i18n.dart';
 import 'package:fordev/ui/pages/pages.dart';
+
 import '../helpers/helpers.dart';
+import '../../mocks/mocks.dart';
 
 class SurveysPresenterSpy extends Mock implements SurveysPresenter {}
 
@@ -44,13 +46,6 @@ void main() {
         initStreams();
         mockStreams();
         await tester.pumpWidget(makePage(path: '/surveys', page: () => SurveysPage(presenter)));
-    }
-
-    List<SurveyViewModel> makeSurveys() {
-        return [
-            SurveyViewModel(id: '1', question: 'Question 1', date: 'Date 1', didAnswer: true),
-            SurveyViewModel(id: '2', question: 'Question 2', date: 'Date 2', didAnswer: false),
-        ];
     }
 
     tearDown(() {
@@ -99,7 +94,7 @@ void main() {
     testWidgets('Should present list if surveysStream succeeds', (WidgetTester tester) async {
         await loadPage(tester);
 
-        surveysController.add(makeSurveys());
+        surveysController.add(FakeSurveysFactory.makeSurveys());
         await tester.pump();
 
         expect(find.text(UIError.unexpected.description), findsNothing);
@@ -123,7 +118,7 @@ void main() {
     testWidgets('Should call gotoSurveyResult on survey click', (WidgetTester tester) async {
         await loadPage(tester);
 
-        surveysController.add(makeSurveys());
+        surveysController.add(FakeSurveysFactory.makeSurveys());
         await tester.pump();
 
         await tester.tap(find.text('Question 1'));

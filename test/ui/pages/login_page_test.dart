@@ -1,11 +1,13 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:mocktail/mocktail.dart';
-import 'package:faker/faker.dart';
 
+import 'package:faker/faker.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'package:fordev/ui/helpers/errors/errors.dart';
 import 'package:fordev/ui/pages/pages.dart';
+import 'package:mocktail/mocktail.dart';
+
 import '../helpers/helpers.dart';
 
 class LoginPresenterSpy extends Mock implements LoginPresenter {}

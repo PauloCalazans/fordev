@@ -1,10 +1,11 @@
 import 'package:test/test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:faker/faker.dart';
 
 import 'package:fordev/domain/entities/entities.dart';
 import 'package:fordev/domain/usecases/usecases.dart';
 import 'package:fordev/presentation/presenters/presenters.dart';
+
+import '../../mocks/mocks.dart';
 
 class LoadCurrentAccountSpy extends Mock implements LoadCurrentAccount {}
 
@@ -25,7 +26,7 @@ void main() {
   setUp(() {
     loadCurrentAccount = LoadCurrentAccountSpy();
     sut = GetxSplashPresenter(loadCurrentAccount: loadCurrentAccount);
-    mockLoadCurrentAccount(account: AccountEntity(faker.guid.guid()));
+    mockLoadCurrentAccount(account: FakeAccountFactory.makeEntity());
   });
 
   test('Should call LoadCurrentAccount', () async {

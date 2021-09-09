@@ -10,6 +10,8 @@ import 'package:fordev/ui/helpers/errors/errors.dart';
 import 'package:fordev/presentation/presenters/dependencies/dependencies.dart';
 import 'package:fordev/presentation/presenters/presenters.dart';
 
+import '../../mocks/mocks.dart';
+
 class ValidationSpy extends Mock implements Validation {}
 class AuthenticationSpy extends Mock implements Authentication {}
 class SaveCurrentAccountSpy extends Mock implements SaveCurrentAccount {}
@@ -23,7 +25,7 @@ void main() {
   late GetxLoginPresenter sut;
   late String email;
   late String password;
-  late String token;
+  late AccountEntity account;
 
   When mockValidationCall(String? field) => when(() =>
     validation.validate(
@@ -39,8 +41,9 @@ void main() {
 
   When mockAuthenticationCall() => when(() => authentication.auth(any()));
 
-  void mockAuthentication() {
-    mockAuthenticationCall().thenAnswer((_) async => AccountEntity(token));
+  void mockAuthentication(AccountEntity data) {
+    account = data;
+    mockAuthenticationCall().thenAnswer((_) async => data);
   }
 
   void mockAuthenticationError(DomainError error) {
@@ -65,9 +68,8 @@ void main() {
     );
     email = faker.internet.email();
     password = faker.internet.password();
-    token = faker.guid.guid();
     mockValidation();
-    mockAuthentication();
+    mockAuthentication(FakeAccountFactory.makeEntity());
   });
 
   test('Should call Validation with correct email', () {
@@ -161,7 +163,7 @@ void main() {
 
     await sut.auth();
 
-    verify(() => saveCurrentAccount.save(AccountEntity(token))).called(1);
+    verify(() => saveCurrentAccount.save(account)).called(1);
   });
 
   test('Should emit UnexpectedError if SaveCurrentAccount fails', () async {
