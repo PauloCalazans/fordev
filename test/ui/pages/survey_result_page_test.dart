@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get/get.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import 'package:fordev/ui/helpers/helpers.dart';
 import 'package:fordev/ui/pages/survey_result/components/components.dart';
 import 'package:fordev/ui/pages/pages.dart';
+import '../helpers/helpers.dart';
 
 class SurveyResultPresenterSpy extends Mock implements SurveyResultPresenter {}
 
@@ -40,15 +40,15 @@ void main() {
         presenter = SurveyResultPresenterSpy();
         initStreams();
         mockStreams();
-        final surveysPage = GetMaterialApp(
-            initialRoute: '/survey_result/any_survey_id',
-            getPages: [
-                GetPage(name: '/survey_result/:survey_id', page: () => SurveyResultPage(presenter)),
-                GetPage(name: '/login', page: () => Scaffold(body: Text('fake login')))
-            ],
-        );
 
-        await mockNetworkImagesFor(() async => await tester.pumpWidget(surveysPage));
+        await mockNetworkImagesFor(() async {
+            await tester.pumpWidget(
+                makePage(
+                    path: '/survey_result/any_survey_id',
+                    page: () => SurveyResultPage(presenter)
+                )
+            );
+        });
     }
     
     SurveyResultViewModel makeSurveyResult() => SurveyResultViewModel(
@@ -138,7 +138,7 @@ void main() {
         isSessionExpiredController.add(true);
         await tester.pumpAndSettle();
 
-        expect(Get.currentRoute, '/login');
+        expect(currentRoute, '/login');
         expect(find.text('fake login'), findsOneWidget);
     });
 
@@ -148,7 +148,7 @@ void main() {
         isSessionExpiredController.add(false);
         await tester.pumpAndSettle();
 
-        expect(Get.currentRoute, '/survey_result/any_survey_id');
+        expect(currentRoute, '/survey_result/any_survey_id');
     });
 
     testWidgets('Should call save on list item click', (WidgetTester tester) async {
